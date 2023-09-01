@@ -36,24 +36,48 @@ function chooseOnlyMessagesToEnvironment(messages: any[][]) {
 }
 
 function filterDidnothingMessages(messages: any[][]) {
+    console.log(messages[0])
     return messages.map(
         messages_in_turn => messages_in_turn.filter((message: any) => message[2] !== 'did nothing')
     ).flat()
 }
 
+function parseMessage(message: string): [string, string] {
+    const content = message;
+
+    if (content.startsWith('said: "')) {
+        return [content.substring(7, content.length - 1), 'speak'];
+    } else if (content.startsWith('[non-verbal communication]')) {
+        return [content.substring(26), 'non-verbal communication'];
+    } else if (content.startsWith('[action]')) {
+        return [content.substring(8), 'action'];
+    } else if (content === 'left the conversation') {
+        return [content, 'leave'];
+    }
+
+    return [content, 'unknown'];
+}
+
+function parseMessages(messages: any[][]) {
+    return messages.map(
+        (message: any) => {
+            const [sender, receiver, content] = message
+            return [sender, receiver].concat(parseMessage(content))
+        }
+    )
+}
+
 function composeMessages(messages: any[][]): Message[] {
     return messages.map(
         (message: any) => {
-            const [id, environment, content] = message
+            const [id, environment, content, type] = message
             // console.log(message_text)
-            const createdAt = "2021-10-10T10:10:10.000Z"
-            const role = "user"
-            console.log(message)
+            const role = "character"
             return {
                 id,
-                createdAt: createdAt ? new Date(createdAt) : undefined,
                 content,
-                role
+                role,
+                type,
             };
         })
 }
@@ -79,9 +103,8 @@ async function getEpisode(episodeId: string) {
             response_json["messages"]
         ) 
         const filtered_messages_list = filterDidnothingMessages(messages_list_raw)
-        const messages_list = composeMessages(filtered_messages_list)
-        
-
+        const parsed_messages_list = parseMessages(filtered_messages_list)
+        const messages_list = composeMessages(parsed_messages_list)
         return messages_list
     }
 }

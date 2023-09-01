@@ -15,7 +15,44 @@ export interface ChatMessageProps {
   message: Message
 }
 
+export function getInitials(fullName: string) {
+  // Check if the input is a non-empty string
+  if (typeof fullName === 'string' && fullName.trim() !== '') {
+    // Split the full name into first and last names
+    const names = fullName.trim().split(' ');
+    
+    if (names.length >= 2) {
+      // Get the first character of the first name and the last character of the last name
+      const firstInitial = names[0][0].toUpperCase();
+      const lastInitial = names[names.length - 1][names[names.length - 1].length - 1].toUpperCase();
+      
+      // Return both initials together
+      return `${firstInitial}${lastInitial}`;
+    }
+  }
+  
+  // Handle invalid input or single names
+  return null; // You can also return an empty string or another value as needed.
+}
+
+export function getMessageClass(messageType: string|undefined) {
+  switch (messageType) {
+      case 'action':
+          return 'bg-blue-200';
+      case 'non-verbal communication':
+          return 'bg-green-200';
+      case 'leave':
+          return 'rounded-md shadow-sm bg-yellow-200';
+      default:
+          return ''; 
+  }
+}
+
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
+  const msgStyles = [
+    "ml-4 flex-1 space-y-2 overflow-hidden px-1",
+    getMessageClass(message.type)
+]
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -29,9 +66,9 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             : 'bg-primary text-primary-foreground'
         )}
       >
-        {message.role === 'user' ? <IconUser /> : <IconOpenAI />}
+        {message.role === 'user' ? <IconUser /> : (message.role === 'character' ? <>{getInitials(message.id)}</> : <IconOpenAI />)}
       </div>
-      <div className="flex-1 px-1 ml-4 space-y-2 overflow-hidden">
+      <div className={msgStyles.join(" ")}>
         <MemoizedReactMarkdown
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
           remarkPlugins={[remarkGfm, remarkMath]}
@@ -43,7 +80,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
               if (children.length) {
                 if (children[0] == '▍') {
                   return (
-                    <span className="mt-1 cursor-default animate-pulse">▍</span>
+                    <span className="mt-1 animate-pulse cursor-default">▍</span>
                   )
                 }
 
