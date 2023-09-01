@@ -1,7 +1,6 @@
 // Inspired by Chatbot-UI and modified to fit the needs of this project
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
 
-import { Message } from 'ai'
 import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 
@@ -9,7 +8,21 @@ import { cn } from '@/lib/utils'
 import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
-import { ChatMessageActions } from '@/components/chat-message-actions'
+import { ChatMessageActions } from './chat-message-actions-history'
+
+export declare type Message = {
+    id: string;
+    createdAt?: Date;
+    content: string;
+    role: 'system' | 'user' | 'assistant' | 'character';
+    type?: 'speak' | 'action' | 'non-verbal communication' | 'leave';
+};
+export declare type CreateMessage = {
+    id?: string;
+    createdAt?: Date;
+    content: string;
+    role: 'system' | 'user' | 'assistant' | 'character';
+};
 
 export interface ChatMessageProps {
   message: Message
@@ -51,7 +64,7 @@ export function getMessageClass(messageType: string|undefined) {
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
   const msgStyles = [
     "ml-4 flex-1 space-y-2 overflow-hidden px-1",
-    getMessageClass(message.id)
+    getMessageClass(message.type)
 ]
   return (
     <div
@@ -66,7 +79,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             : 'bg-primary text-primary-foreground'
         )}
       >
-        {message.role === 'user' ? <IconUser /> :  <IconOpenAI />}
+        {message.role === 'user' ? <IconUser /> : (message.role === 'character' ? <>{getInitials(message.id)}</> : <IconOpenAI />)}
       </div>
       <div className={msgStyles.join(" ")}>
         <MemoizedReactMarkdown

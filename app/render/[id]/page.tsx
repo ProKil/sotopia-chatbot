@@ -3,11 +3,11 @@ import { notFound, redirect } from 'next/navigation'
 
 import { auth } from '@/auth'
 import { getChat } from '@/app/actions'
-import { Message } from 'ai'
 import { cn } from '@/lib/utils'
 import { ChatProps } from '@/components/chat'
-import { ChatList } from '@/components/chat-list'
 import { EmptyScreen } from '@/components/empty-screen'
+import { Message } from '@/components/chat-message-history'
+import { ChatList } from '@/components/chat-list-history'
 
 export const runtime = 'edge'
 export const preferredRegion = 'home'
