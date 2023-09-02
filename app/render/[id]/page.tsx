@@ -87,12 +87,10 @@ async function getEpisode(episodeId: string) {
         throw new Error("SOTOPIA_SERVER_URL is undefined")
     } else {
         console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
-        const request = new Request(
-            process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId, {
-            method: 'GET',
-        })
-        const response_json = await fetch(request)
-            .then(response  => {
+        const response_json = await fetch(
+            process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
+            {method: 'GET'}
+        ).then(response  => {
                 if (response.status === 200) {
                     return response.json();
                 } else {
