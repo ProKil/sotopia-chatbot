@@ -90,13 +90,16 @@ async function getEpisode(episodeId: string) {
         const response_json = await fetch(
             process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
             {method: 'GET'}
-        ).then(response  => {
+        ).then((response)  => {
                 if (response.status === 200) {
                     return response.json();
                 } else {
-                    throw new Error("Something went wrong on API server!");
+                    throw new Error("Something went wrong on API server!" + response.status + response.statusText);
                 }
-            });
+            })
+            .catch(err => {
+                console.log('caught it!',err);
+             });
         const messages_list_raw = chooseOnlyMessagesToEnvironment(
             response_json["messages"]
         ) 
