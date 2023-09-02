@@ -8,6 +8,7 @@ import { ChatProps } from '@/components/chat'
 import { EmptyScreen } from '@/components/empty-screen'
 import { Message } from '@/components/chat-message-history'
 import { ChatList } from '@/components/chat-list-history'
+import { Separator } from '@radix-ui/react-dropdown-menu'
 
 export const runtime = 'edge'
 export const preferredRegion = 'home'
@@ -36,7 +37,6 @@ function chooseOnlyMessagesToEnvironment(messages: any[][]) {
 }
 
 function filterDidnothingMessages(messages: any[][]) {
-    console.log(messages[0])
     return messages.map(
         messages_in_turn => messages_in_turn.filter((message: any) => message[2] !== 'did nothing')
     ).flat()
@@ -71,7 +71,6 @@ function composeMessages(messages: any[][], name2model: { [name: string]: string
     return messages.map(
         (message: any) => {
             const [id, environment, content, type] = message
-            // console.log(message_text)
             const role = "character"
             return {
                 id,
@@ -111,7 +110,7 @@ async function getEpisode(episodeId: string) {
         const filtered_messages_list = filterDidnothingMessages(messages_list_raw)
         const parsed_messages_list = parseMessages(filtered_messages_list)
         const messages_list = composeMessages(parsed_messages_list, name2model)
-        return messages_list
+        return [messages_list, response_json["messages"], response_json["rewards"], response_json["reasoning"]]
     }
 }
 
@@ -138,13 +137,38 @@ export default async function ChatPage({ params }: ChatPageProps) {
 //   }
 
 //   return <Chat id={chat.id} initialMessages={chat.messages} />
-    const messages = await getEpisode(params.id)
-    console.log(messages[0])
+    const [messages, messages_context, rewards, reasoning] = await getEpisode(params.id)
+    console.log(messages_context[0])
     return (
         <div className={cn('pb-[200px] pt-4 md:pt-10')}>
           
             <>
               <ChatList messages={messages} />
             </>
+
+            <div className="flex flex-col items-center justify-center min-h-screen mt-20">
+                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line mb-4">
+                    {messages_context[0][0].slice(1).join("\n")}
+                </div>
+
+                <div className="border-t border-gray-400 my-4"></div>
+
+                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line">
+                {messages_context[0][1].slice(1).join("\n")}
+                </div>
+
+                <div className="border-t border-gray-400 my-4"></div>
+
+                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line">
+                    {JSON.stringify(rewards, null, 2)}
+                </div>
+
+                <div className="border-t border-gray-400 my-4"></div>
+
+                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line">
+                    {reasoning}
+                </div>
+            </div>
+
         </div>)
 }
