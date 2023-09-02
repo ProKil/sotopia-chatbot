@@ -67,7 +67,7 @@ function parseMessages(messages: any[][]) {
     )
 }
 
-function composeMessages(messages: any[][]): Message[] {
+function composeMessages(messages: any[][], name2model: { [name: string]: string }): Message[] {
     return messages.map(
         (message: any) => {
             const [id, environment, content, type] = message
@@ -78,6 +78,7 @@ function composeMessages(messages: any[][]): Message[] {
                 content,
                 role,
                 type,
+                additional_info: name2model[id]
             };
         })
 }
@@ -103,9 +104,13 @@ async function getEpisode(episodeId: string) {
         const messages_list_raw = chooseOnlyMessagesToEnvironment(
             response_json["messages"]
         ) 
+        var name2model: { [name: string]: string } = {}
+        messages_list_raw[0].slice(0, 2).forEach((message, index) => {
+            name2model[message[0]] = response_json["models"][index] // not handling #models < 1
+        })
         const filtered_messages_list = filterDidnothingMessages(messages_list_raw)
         const parsed_messages_list = parseMessages(filtered_messages_list)
-        const messages_list = composeMessages(parsed_messages_list)
+        const messages_list = composeMessages(parsed_messages_list, name2model)
         return messages_list
     }
 }

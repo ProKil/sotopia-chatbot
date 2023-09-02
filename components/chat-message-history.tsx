@@ -16,6 +16,7 @@ export declare type Message = {
     content: string;
     role: 'system' | 'user' | 'assistant' | 'character';
     type?: 'speak' | 'action' | 'non-verbal communication' | 'leave';
+    additional_info?: string; // a footnote for the message
 };
 export declare type CreateMessage = {
     id?: string;
@@ -59,6 +60,14 @@ export function getMessageClass(messageType: string|undefined) {
       default:
           return ''; 
   }
+}
+
+function showAdditionalInfo(message: Message) {
+  if (message.additional_info) {
+    return (
+      <div className="text-xs text-gray-400 text-left">{message.additional_info}</div>
+    )
+  } else return ""
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
@@ -123,6 +132,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         >
           {message.content}
         </MemoizedReactMarkdown>
+        {showAdditionalInfo(message)}
         <ChatMessageActions message={message} />
       </div>
     </div>
