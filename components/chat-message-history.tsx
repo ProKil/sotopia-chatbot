@@ -38,7 +38,7 @@ export function getInitials(fullName: string) {
     if (names.length >= 2) {
       // Get the first character of the first name and the last character of the last name
       const firstInitial = names[0][0].toUpperCase();
-      const lastInitial = names[names.length - 1][names[names.length - 1].length - 1].toUpperCase();
+      const lastInitial = names[names.length - 1][0].toUpperCase();
       
       // Return both initials together
       return `${firstInitial}${lastInitial}`;
