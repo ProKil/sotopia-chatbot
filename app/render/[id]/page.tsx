@@ -86,9 +86,11 @@ async function getEpisode(episodeId: string) {
     if (process.env.SOTOPIA_SERVER_URL === undefined) {
         throw new Error("SOTOPIA_SERVER_URL is undefined")
     } else {
-        console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
+        // console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
+        // const response_json = await fetch(
+        //     process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
         const response_json = await fetch(
-            process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
+            "https://reqres.in/api/users/2",
             {method: 'GET'}
         ).then((response)  => {
                 if (response.status === 200) {
@@ -146,26 +148,26 @@ export default async function ChatPage({ params }: ChatPageProps) {
               <ChatList messages={messages} />
             </>
 
-            <div className="flex flex-col items-center justify-center min-h-screen mt-20">
-                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line mb-4">
+            <div className="mt-20 flex min-h-screen flex-col items-center justify-center">
+                <div className="mb-4 w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
                     {messages_context[0][0].slice(1).join("\n")}
                 </div>
 
-                <div className="border-t border-gray-400 my-4"></div>
+                <div className="my-4 border-t border-gray-400"></div>
 
-                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line">
+                <div className="w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
                 {messages_context[0][1].slice(1).join("\n")}
                 </div>
 
-                <div className="border-t border-gray-400 my-4"></div>
+                <div className="my-4 border-t border-gray-400"></div>
 
-                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line">
+                <div className="w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
                     {JSON.stringify(rewards, null, 2)}
                 </div>
 
-                <div className="border-t border-gray-400 my-4"></div>
+                <div className="my-4 border-t border-gray-400"></div>
 
-                <div className="w-2/5 sm:w-3/5 bg-gray-200 shadow-md p-4 whitespace-pre-line">
+                <div className="w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
                     {reasoning}
                 </div>
             </div>

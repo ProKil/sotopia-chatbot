@@ -65,7 +65,7 @@ export function getMessageClass(messageType: string|undefined) {
 function showAdditionalInfo(message: Message) {
   if (message.additional_info) {
     return (
-      <div className="text-xs text-gray-400 text-left">{message.additional_info}</div>
+      <div className="text-left text-xs text-gray-400">{message.additional_info}</div>
     )
   } else return ""
 }
