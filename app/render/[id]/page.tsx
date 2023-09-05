@@ -86,11 +86,9 @@ async function getEpisode(episodeId: string) {
     if (process.env.SOTOPIA_SERVER_URL === undefined) {
         throw new Error("SOTOPIA_SERVER_URL is undefined")
     } else {
-        // console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
-        // const response_json = await fetch(
-        //     process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
+        console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
         const response_json = await fetch(
-            "https://reqres.in/api/users/2",
+            process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
             {method: 'GET'}
         ).then((response)  => {
                 if (response.status === 200) {

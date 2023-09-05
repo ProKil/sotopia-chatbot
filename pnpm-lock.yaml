@@ -119,7 +119,7 @@ devDependencies:
     specifier: ^10.4.13
     version: 10.4.14(postcss@8.4.23)
   eslint:
-    specifier: ^8.31.0
+    specifier: ^8.40.0
     version: 8.40.0
   eslint-config-next:
     specifier: 13.4.7-canary.1
