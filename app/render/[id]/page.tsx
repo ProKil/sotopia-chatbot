@@ -89,7 +89,7 @@ async function getEpisode(episodeId: string) {
         console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
         const response_json = await fetch(
             process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
-            {method: 'GET'}
+            {method: 'GET', cache: 'no-store' }
         ).then((response)  => {
                 if (response.status === 200) {
                     return response.json();
