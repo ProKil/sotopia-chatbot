@@ -261,7 +261,7 @@ export async function agentCard(agentId: string) {
 
     return (<div className="m-10 max-w-sm">
               <div className="rounded-lg border-2 border-gray-900 bg-white px-4 pb-4 pt-1">
-                <div className="pl-2 pr-2 pb-2" data-testid="card">
+                <div className="pb-2 px-2" data-testid="card">
                   <div className="flex flex-row pt-2">
                     <div
                       className="border-[1px] border-gray-400 h-[50px] w-[50px] relative shadow-lg rounded-md"
@@ -296,7 +296,7 @@ export async function agentCard(agentId: string) {
                       <div className="flex-row flex-wrap">
                         <i className="fa-solid fa-lock fa-sm"></i>
                           <span className="ml-auto"
-                          ><span className="px-1 py-1 text-sm font-medium"
+                          ><span className="p-1 text-sm font-medium"
                             >{ agent.secret }</span
                           ></span
                         >
