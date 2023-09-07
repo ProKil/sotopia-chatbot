@@ -1,3 +1,5 @@
+'use client'
+
 import { type Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
@@ -83,12 +85,13 @@ function composeMessages(messages: any[][], name2model: { [name: string]: string
 }
 
 async function getEpisode(episodeId: string) {
-    if (process.env.SOTOPIA_SERVER_URL === undefined) {
+    const SOTOPIA_SERVER_URL = "https://tiger.lti.cs.cmu.edu:8002/"
+    if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error("SOTOPIA_SERVER_URL is undefined")
     } else {
-        console.log(process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
+        console.log(SOTOPIA_SERVER_URL + "get_episode/" + episodeId)
         const response_json = await fetch(
-            process.env.SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
+            SOTOPIA_SERVER_URL + "get_episode/" + episodeId,
             {method: 'GET', cache: 'no-store' }
         ).then((response)  => {
                 if (response.status === 200) {
@@ -114,20 +117,20 @@ async function getEpisode(episodeId: string) {
     }
 }
 
-export async function generateMetadata({
-  params
-}: ChatPageProps): Promise<Metadata> {
-  const session = await auth()
+// export async function generateMetadata({
+//   params
+// }: ChatPageProps): Promise<Metadata> {
+//   const session = await auth()
 
-  if (!session?.user) {
-    return {}
-  }
+//   if (!session?.user) {
+//     return {}
+//   }
 
-  const chat = await getChat(params.id, session.user.id)
-  return {
-    title: chat?.title.toString().slice(0, 50) ?? 'Chat'
-  }
-}
+//   const chat = await getChat(params.id, session.user.id)
+//   return {
+//     title: chat?.title.toString().slice(0, 50) ?? 'Chat'
+//   }
+// }
 
 
 export default async function ChatPage({ params }: ChatPageProps) {
