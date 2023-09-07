@@ -145,11 +145,11 @@ export default async function ChatPage({ params }: ChatPageProps) {
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
             <script src="https://cdn.tailwindcss.com"></script>
 
-            <div className="col-span-12 m-10 mx-auto p-10 dark:bg-black dark:text-white">
+            <div className="col-span-12 w-full m-10 mx-auto p-10 dark:bg-black dark:text-white">
                 <div className="col-span-12 w-full border-2 border-gray-900 bg-gray-200 p-10 dark:bg-black dark:text-white">
                     <h1 className="text-center text-xl">Social Scenario: episode.social_scenario</h1>
                 </div>
-
+                <div className='flex flex-row'>
                 <div className="col-span-6 m-10 max-w-sm">
                     <div className="rounded-lg border-2 border-gray-900 bg-white px-4 pb-4 pt-1 dark:bg-black dark:text-white">
                     <div className="pb-2 pl-2 pr-2" data-testid="card">
@@ -268,6 +268,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
                             </div>
                         </li>
                         </ul>
+                    </div>
                     </div>
                     </div>
                 </div>
