@@ -20,7 +20,7 @@ export type Character = {
 export const characterCard = ( 
     agent: Character
 ) => (
-          <div className="rounded-lg border-2 border-gray-900 bg-white px-4 pb-4 pt-1 dark:bg-black dark:text-white">
+          <div className="rounded-lg drop-shadow-md bg-white px-4 pb-4 pt-1 dark:bg-black dark:text-white">
             <div className="pb-2 pl-2 pr-2" data-testid="card">
               <div className="flex flex-row pt-2">
                 <div className="relative h-[50px] w-[50px] rounded-md border-[1px] border-gray-400 shadow-lg">

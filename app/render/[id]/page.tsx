@@ -14,6 +14,7 @@ import '@fortawesome/react-fontawesome'
 import { Character, characterCard } from '@/components/character'
 import { ScoresCommentsData, parseReasoning, rewardDiagram } from '@/components/rewards'
 import { ScenarioData, parseScenarioData } from '@/components/scenario'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 export const runtime = 'edge'
 export const preferredRegion = 'home'
@@ -173,64 +174,56 @@ export default async function ChatPage({ params }: ChatPageProps) {
     console.log(scenario)
     const reasoning_data = parseReasoning(reasoning)
     return (
-        <div className={cn('pb-[200px] pt-4 md:pt-10 grid grid-cols-12 gap-4')}>
+        <div className={cn('grid grid-cols-12 gap-6 pb-[200px] px-60 pt-4 md:pt-10')}>
                 
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-
-            <div className="col-span-12 w-full m-10 mx-auto p-10 dark:bg-black dark:text-white">
-                <div className="col-span-12 w-full border-2 border-gray-900 bg-gray-200 p-10 dark:bg-black dark:text-white">
-                    <h1 className="text-center text-xl">{scenario.scenario}</h1>
+                <div className="col-start-3 col-span-8 rounded-md bg-gray-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                    <h1 className="text-center font-sans text-xl italic">{scenario.scenario}</h1>
                 </div>
-                <div className='flex flex-row'>
-                <div className="col-span-6 m-10 max-w-sm">
+                <div className="col-span-4 col-start-3">
                     {characterCard(agent1)}
-                    <div className="border-2 border-gray-900 bg-gray-200 p-10 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl">{scenario.agent1Goal}</h1>
-                    </div>
+                    <div className="p-5">
+                    <div className="p-3 rounded-md bg-gray-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                        <h1 className="text-center font-sans text-md">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent1Goal}</h1>
                 </div>
-                <div className="col-span-6 m-10 max-w-sm">
+                </div>
+                </div>
+                <div className="col-span-4 col-start-7">
                     {characterCard(agent2)}
-                    <div className="border-2 border-gray-900 bg-gray-200 p-10 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl">{scenario.agent2Goal}</h1>
+                    <div className="p-5">
+                    <div className="p-3 rounded-md bg-gray-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                        <h1 className="text-center font-sans text-md">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent2Goal}</h1>
+                    </div>
                     </div>
                 </div>
-                </div>
-            </div>
 
             <div className='col-span-12'>
             <ChatList  messages={messages} />
             </div>
 
 
-            <div className="col-span-12 dark:bg-black dark:text-white">
-                <div className="col-span-6 m-10 mx-auto flex-row">
-                    <div className="m-10 max-w-sm">
-                    <div className="w-full rounded-2xl border-2 border-gray-900 bg-gray-200 p-4 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl">Scores for Agent1</h1>
-                    </div>
+                <div className="col-span-5 col-start-2">
+                    <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
+                        <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
                     </div>
                     {rewardDiagram(rewards[0][1])}
-
-                    <div className="m-10 max-w-sm">
+                    {/* <div className="m-10 max-w-sm">
                     <div className="w-full rounded-2xl border-2 border-gray-900 bg-gray-200 p-4 dark:bg-black dark:text-white">
                             <h1 className="text-center text-xl">{reasoning_data.agent1_comment}</h1>
                     </div>
-                    </div>
+                    </div> */}
                 </div>
 
-                <div className="col-span-6 m-10 mx-auto flex-row">
-                    <div className="m-10 max-w-sm">
-                    <div className="w-full rounded-2xl border-2 border-gray-900 bg-gray-200 p-4 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl">Scores for Agent2</h1>
-                    </div>
+                <div className="col-span-5">
+                    <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
+                        <h1 className="text-center text-xl font-sans">Scores for Agent2</h1>
                     </div>
                     {rewardDiagram(rewards[1][1])}
-                    <div className="m-10 max-w-sm">
+                    {/* <div className="m-10 max-w-sm">
                     <div className="w-full rounded-2xl border-2 border-gray-900 bg-gray-200 p-4 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl">{reasoning_data.agent2_comment} </h1>
-                    </div>
-                    </div>
+                        <h1 className="text-center text-xl">{reasoning_data.agent2_comment} </h1> */}
+                    {/* </div> */}
+                    {/* </div> */}
                 </div>
-            </div>
         </div>)
 }
