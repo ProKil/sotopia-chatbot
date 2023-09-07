@@ -11,6 +11,7 @@ import { EmptyScreen } from '@/components/empty-screen'
 import { Message } from '@/components/chat-message-history'
 import { ChatList } from '@/components/chat-list-history'
 import { Separator } from '@radix-ui/react-dropdown-menu'
+import { useEffect, useState } from 'react'
 
 export const runtime = 'edge'
 export const preferredRegion = 'home'
@@ -84,7 +85,14 @@ function composeMessages(messages: any[][], name2model: { [name: string]: string
         })
 }
 
-async function getEpisode(episodeId: string) {
+declare type GetEpisodeHelper = {
+    messages: Message[],
+    messages_context: any,
+    rewards: any,
+    reasoning: any
+}
+
+async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
     const SOTOPIA_SERVER_URL = "https://tiger.lti.cs.cmu.edu:8002/"
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error("SOTOPIA_SERVER_URL is undefined")
@@ -113,7 +121,12 @@ async function getEpisode(episodeId: string) {
         const filtered_messages_list = filterDidnothingMessages(messages_list_raw)
         const parsed_messages_list = parseMessages(filtered_messages_list)
         const messages_list = composeMessages(parsed_messages_list, name2model)
-        return [messages_list, response_json["messages"], response_json["rewards"], response_json["reasoning"]]
+        return {
+            messages: messages_list,
+            messages_context: response_json["messages"],
+            rewards: response_json["rewards"],
+            reasoning: response_json["reasoning"]
+        }
     }
 }
 
@@ -133,15 +146,31 @@ async function getEpisode(episodeId: string) {
 // }
 
 
-export default async function ChatPage({ params }: ChatPageProps) {
+export default function ChatPage({ params }: ChatPageProps) {
   
 //   if (chat?.userId !== session?.user?.id) {
 //     notFound()
 //   }
 
 //   return <Chat id={chat.id} initialMessages={chat.messages} />
-    const [messages, messages_context, rewards, reasoning] = await getEpisode(params.id)
-    console.log(messages_context[0])
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages_context, setMessagesContext] = useState<any>(null);
+    const [rewards, setRewards] = useState<any>(null);
+    const [reasoning, setReasoning] = useState<any>(null);
+
+    useEffect(
+        () => {
+            const fetchData = async () => {
+                const { messages, messages_context, rewards, reasoning } = await getEpisode(params.id);
+                setMessages(messages);
+                setMessagesContext(messages_context);
+                setRewards(rewards);
+                setReasoning(reasoning);
+            };
+            fetchData().catch(console.error);
+        },
+        []
+    );
     return (
         <div className={cn('pb-[200px] pt-4 md:pt-10')}>
           
@@ -151,25 +180,25 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
             <div className="mt-20 flex min-h-screen flex-col items-center justify-center">
                 <div className="mb-4 w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
-                    {messages_context[0][0].slice(1).join("\n")}
+                    {messages_context && messages_context[0][0].slice(1).join("\n")}
                 </div>
 
                 <div className="my-4 border-t border-gray-400"></div>
 
                 <div className="w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
-                {messages_context[0][1].slice(1).join("\n")}
+                {messages_context && messages_context[0][1].slice(1).join("\n")}
                 </div>
 
                 <div className="my-4 border-t border-gray-400"></div>
 
                 <div className="w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
-                    {JSON.stringify(rewards, null, 2)}
+                    {rewards && JSON.stringify(rewards, null, 2)}
                 </div>
 
                 <div className="my-4 border-t border-gray-400"></div>
 
                 <div className="w-2/5 whitespace-pre-line bg-gray-200 p-4 shadow-md sm:w-3/5">
-                    {reasoning}
+                    {reasoning && reasoning}
                 </div>
             </div>
 
