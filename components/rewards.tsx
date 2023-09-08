@@ -1,4 +1,4 @@
-export type Rewards = {
+export type rewards = {
     believability: number;
     relationship: number;
     knowledge: number;
@@ -62,7 +62,7 @@ const RewardBar = ({
     </div>
 );
 
-const defaultRewards: Rewards = {
+const defaultRewards: rewards = {
     believability: 2,
     relationship: 3,
     knowledge: 2,
@@ -83,13 +83,12 @@ const rewardProperties: Record<string, RewardProperties> = {
     goal: { min: 0, max: 10, begin_color: 'white', end_color: 'red' }
 };
 
-export const rewardDiagram = ({ scores }: { scores?: Rewards }) => {
-    const effectiveScores = { ...defaultRewards, ...scores };
+export const rewardDiagram = (scores: rewards ) => {
 
     return (
         <div className="rounded-lg drop-shadow-md hover:bg-slate-300 bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
         <div className="flex-col">
-            {Object.keys(effectiveScores).map((key, index) => {
+            {Object.keys(scores).map((key, index) => {
             if (key === 'overall_score') return null;
 
             const { min, max, begin_color, end_color } = rewardProperties[key] || {};
@@ -98,7 +97,7 @@ export const rewardDiagram = ({ scores }: { scores?: Rewards }) => {
                 <RewardBar
                 key={index}
                 label={key}
-                value={effectiveScores[key as keyof Rewards]}
+                value={scores[key as keyof rewards]}
                 min={min}
                 max={max}
                 begin_color={begin_color}
@@ -112,9 +111,6 @@ export const rewardDiagram = ({ scores }: { scores?: Rewards }) => {
 };
 
 
-
-
-        
 export interface ScoresCommentsData {
     terminated_reason: string;
     agent1_comment: string;
