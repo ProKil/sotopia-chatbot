@@ -1,8 +1,3 @@
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import Paper from '@mui/material/Paper';
-import Fade from '@mui/material/Fade';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import { rewards } from "./rewards";
 
 function BeautifyJson(data: any) {

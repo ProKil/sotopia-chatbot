@@ -172,7 +172,7 @@ async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
     }
 }
 
-export function getEmptyCharacter(): Character {
+function getEmptyCharacter(): Character {
     return {
         pk: "",
         first_name: "",
@@ -193,7 +193,7 @@ export function getEmptyCharacter(): Character {
       };
 }
 
-export function getEmptyScenarioData(): ScenarioData {
+function getEmptyScenarioData(): ScenarioData {
     return {
         scenario: "",
         agent1: "",
@@ -203,7 +203,7 @@ export function getEmptyScenarioData(): ScenarioData {
     };
 }
 
-export function getEmptyRewards(): rewards {
+function getEmptyRewards(): rewards {
     return {
         believability: 0,
         relationship: 0,
@@ -216,14 +216,14 @@ export function getEmptyRewards(): rewards {
     }
 }
 
-export function getAgentOneRewards(rewards: any): rewards {
+function getAgentOneRewards(rewards: any): rewards {
     if (rewards === null) {
         return getEmptyRewards()
     }
     return rewards[0][1]
 }
 
-export function getAgentTwoRewards(rewards: any): rewards {
+function getAgentTwoRewards(rewards: any): rewards {
     if (rewards === null) {
         return getEmptyRewards()
     }
@@ -231,13 +231,6 @@ export function getAgentTwoRewards(rewards: any): rewards {
 }
 
 export default function ChatPage({ params }: ChatPageProps) {
-  
-//   if (chat?.userId !== session?.user?.id) {
-//     notFound()
-//   }
-
-//   return <Chat id={chat.id} initialMessages={chat.messages} />
-
     const [messages, setMessages] = useState<Message[]>([]);
     const [messages_context, setMessagesContext] = useState<any>(null);
     const [rewards, setRewards] = useState<any>(null);
