@@ -12,7 +12,7 @@ export type rewards = {
 export const rewardDiagram = ( 
     scores: rewards
 ) => (
-            <div className="rounded-lg drop-shadow-md bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
+            <div className="rounded-lg drop-shadow-md hover:bg-slate-300 bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
             <div className="flex-col">
                 <p className="font-trajan">Believability</p>
                 <div className="h-5 w-full p-1">
@@ -118,8 +118,9 @@ export const rewardDiagram = (
                     <div className="ml-1 w-[30%] px-2">10</div>
                 </div>
                 </div>
-            </div>
-            </div>
+        </div>
+    </div>
+
 );
         
 export interface ScoresCommentsData {

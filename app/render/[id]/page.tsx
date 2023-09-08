@@ -15,6 +15,8 @@ import { Character, characterCard } from '@/components/character'
 import { ScoresCommentsData, parseReasoning, rewardDiagram } from '@/components/rewards'
 import { ScenarioData, parseScenarioData } from '@/components/scenario'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import RawScoresReasoning from '@/components/raw_scores_reasoning'
+import { IconOpenAI } from '@/components/ui/icons'
 
 export const runtime = 'edge'
 export const preferredRegion = 'home'
@@ -201,29 +203,27 @@ export default async function ChatPage({ params }: ChatPageProps) {
             <ChatList  messages={messages} />
             </div>
 
+            <div className='col-span-10 col-start-2 justify-items-center pt-20'>
+            <div className="text-center rounded-md bg-lime-400 drop-shadow-md p-3">
+                <h1 className="text-4xl">Automatic Evaluation</h1>
+                <IconOpenAI className="w-16 h-16 mx-auto mt-4" />
+            </div>
+            </div>
 
-                <div className="col-span-5 col-start-2">
-                    <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
-                    </div>
-                    {rewardDiagram(rewards[0][1])}
-                    {/* <div className="m-10 max-w-sm">
-                    <div className="w-full rounded-2xl border-2 border-gray-900 bg-gray-200 p-4 dark:bg-black dark:text-white">
-                            <h1 className="text-center text-xl">{reasoning_data.agent1_comment}</h1>
-                    </div>
-                    </div> */}
+            <div className="col-span-5 col-start-2 pt-8">
+                <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
+                    <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
                 </div>
+                {rewardDiagram(rewards[0][1])}
+                {RawScoresReasoning(rewards[0][1], reasoning_data.agent1_comment)}
+            </div>
 
-                <div className="col-span-5">
-                    <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl font-sans">Scores for Agent2</h1>
-                    </div>
-                    {rewardDiagram(rewards[1][1])}
-                    {/* <div className="m-10 max-w-sm">
-                    <div className="w-full rounded-2xl border-2 border-gray-900 bg-gray-200 p-4 dark:bg-black dark:text-white">
-                        <h1 className="text-center text-xl">{reasoning_data.agent2_comment} </h1> */}
-                    {/* </div> */}
-                    {/* </div> */}
+            <div className="col-span-5 pt-8">
+                <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
+                    <h1 className="text-center text-xl font-sans">Scores for Agent2</h1>
                 </div>
+                {rewardDiagram(rewards[1][1])}
+                {RawScoresReasoning(rewards[1][1], reasoning_data.agent2_comment)}
+            </div>
         </div>)
 }
