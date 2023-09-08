@@ -135,6 +135,10 @@ export const parseReasoning = (text: string): ScoresCommentsData => {
         agent1_comment: '',
         agent2_comment: '',
     };
+    if (text === null) {
+        // If text is null, return an empty ScoresCommentsData
+        return interactionData;
+      }
   
     // Extracting "terminated reason"
     const terminatedReasonMatch = text.match(/terminated reason:\s*([\s\S]*?)(?=\w+:|$)/i);

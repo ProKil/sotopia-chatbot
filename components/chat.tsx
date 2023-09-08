@@ -1,6 +1,7 @@
 'use client'
 
-import { useChat, type Message } from 'ai/react'
+import { type Message } from 'ai/react'
+import { useChat } from '@/components/use-chat'
 
 import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
