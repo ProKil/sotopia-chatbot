@@ -1,4 +1,4 @@
-export type rewards = {
+export type Rewards = {
     believability: number;
     relationship: number;
     knowledge: number;
@@ -7,121 +7,113 @@ export type rewards = {
     financial_and_material_benefits: number;
     goal: number;
     overall_score: number;
-}
+};
 
-export const rewardDiagram = ( 
-    scores: rewards
-) => (
-            <div className="rounded-lg drop-shadow-md hover:bg-slate-300 bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
-            <div className="flex-col">
-                <p className="font-trajan">Believability</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="w-[10rem] px-2 text-right">0</div>
-                    <div className="h-full w-[66rem] border-gray-200 bg-gradient-to-r from-white to-red-500"></div>
-                    <div className="group relative">
-                        <div className={"h-4 w-1 bg-black -translate-x-[" + `${3 * (10 - scores.believability)}rem` + "]"}>
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.believability}</div>
-                    </div>
-                    </div>
+type RewardProperties = {
+    min: number;
+    max: number;
+    begin_color: string;
+    end_color: string;
+};
 
-                    <div className="w-[10rem] px-2">10</div>
-                </div>
-                </div>
-                <p className="small-caps">Relationship</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="w-[10rem] px-2 text-right">-5</div>
-                    <div className="h-full w-[66rem] border-gray-200 bg-gradient-to-r from-blue-500 via-white to-red-500"></div>
-                    <div className="group relative">
-                    <div className="h-10 w-full bg-gradient-to-r from-blue-500 to-red-500"></div>
-
-                    <div className="absolute left-1/2 top-1/2 h-4 w-1 -translate-x-[1500%] -translate-y-1/2 transform bg-black">
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.relationship}</div>
+const RewardBar = ({
+    label,
+    value,
+    min,
+    max,
+    begin_color,
+    end_color
+}: {
+    label: string;
+    value: number;
+    min: number;
+    max: number;
+    begin_color: string;
+    end_color: string;
+}) => (
+    <div>
+        <p className="small-caps">{label}</p>
+        <div className="h-5 w-full p-1">
+        <div className="flex h-full items-center">
+            <div className="w-[10rem] px-2 text-right">{min}</div>
+            <div
+                style={{
+                    width: "66rem",
+                    background: `linear-gradient(to right, ${begin_color}, ${end_color})`
+                }}
+                className="relative h-full"
+            >
+            <div className="absolute left-0 top-0 h-full w-full">
+                <div className="group relative">
+                <div
+                    className="absolute -top-1 h-6 w-1 bg-black"
+                    style={{ left: `${((value - min) / (max - min)) * 100}%` }}
+                >
+                    <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">
+                    {value}
                     </div>
-                    </div>
-                    <div className="w-[10rem] px-2">5</div>
                 </div>
                 </div>
-                <p className="small-caps">Knowledge</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="mr-1 w-[30%] px-2 text-right">0</div>
-                    <div className="h-full w-[180%] border-2 border-gray-200 bg-gradient-to-r from-white to-red-500"></div>
-                    <div className="group relative">
-                    <div className="h-10 w-full bg-gradient-to-r from-blue-500 to-red-500"></div>
-
-                    <div className="absolute left-1/2 top-1/2 h-4 w-1 -translate-x-[1000%] -translate-y-1/2 transform bg-black">
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.knowledge}</div>
-                    </div>
-                    </div>
-                    <div className="ml-1 w-[30%] px-2">10</div>
-                </div>
-                </div>
-                <p className="small-caps">Secret</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="mr-1 w-[30%] px-2 text-right">-10</div>
-                    <div className="h-full w-[180%] border-2 border-gray-200 bg-gradient-to-r from-blue-500 to-white"></div>
-                    <div className="group relative">
-                    <div className="h-10 w-full bg-gradient-to-r from-blue-500 to-red-500"></div>
-
-                    <div className="absolute left-1/2 top-1/2 h-4 w-1 -translate-x-[0%] -translate-y-1/2 transform bg-black">
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.secret}</div>
-                    </div>
-                    </div>
-                    <div className="ml-1 w-[30%] px-2">0</div>
-                </div>
-                </div>
-                <p className="small-caps">Social Rules</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="mr-1 w-[30%] px-2 text-right">-10</div>
-                    <div className="h-full w-[180%] border-2 border-gray-200 bg-gradient-to-r from-blue-500 to-white"></div>
-                    <div className="group relative">
-                    <div className="h-10 w-full bg-gradient-to-r from-blue-500 via-white to-red-500"></div>
-
-                    <div className="absolute left-1/2 top-1/2 h-4 w-1 -translate-x-[500%] -translate-y-1/2 transform bg-black">
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.social_rules}</div>
-                    </div>
-                    </div>
-                    <div className="ml-1 w-[30%] px-2">0</div>
-                </div>
-                </div>
-                <p className="small-caps">Financial and Material Benefits</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="mr-1 w-[30%] px-2 text-right">-5</div>
-                    <div className="h-full w-[180%] border-2 border-gray-200 bg-gradient-to-r from-blue-500 via-white to-red-500"></div>
-                    <div className="group relative">
-                    <div className="h-10 w-full bg-gradient-to-r from-blue-500 to-red-500"></div>
-
-                    <div className="absolute left-1/2 top-1/2 h-4 w-1 -translate-x-[3000%] -translate-y-1/2 transform bg-black">
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.financial_and_material_benefits}</div>
-                    </div>
-                    </div>
-                    <div className="ml-1 w-[30%] px-2">5</div>
-                </div>
-                </div>
-                <p className="small-caps">Goal Completion</p>
-                <div className="h-5 w-full p-1">
-                <div className="flex h-full items-center">
-                    <div className="mr-1 w-[30%] px-2 text-right">0</div>
-                    <div className="h-full w-[180%] border-2 border-gray-200 bg-gradient-to-r from-white to-red-500"></div>
-                    <div className="group relative">
-                    <div className="h-10 w-full bg-gradient-to-r from-blue-500 to-red-500"></div>
-
-                    <div className="absolute left-1/2 top-1/2 h-4 w-1 -translate-x-[4000%] -translate-y-1/2 transform bg-black">
-                            <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">{scores.goal}</div>
-                    </div>
-                    </div>
-                    <div className="ml-1 w-[30%] px-2">10</div>
-                </div>
-                </div>
+            </div>
+            </div>
+            <div className="w-[10rem] px-2">{max}</div>
+        </div>
         </div>
     </div>
-
 );
+
+const defaultRewards: Rewards = {
+    believability: 2,
+    relationship: 3,
+    knowledge: 2,
+    secret: -2,
+    social_rules: -8,
+    financial_and_material_benefits: 4,
+    goal: 2,
+    overall_score: 3
+};
+
+const rewardProperties: Record<string, RewardProperties> = {
+    believability: { min: 0, max: 10, begin_color: 'white', end_color: 'red' },
+    relationship: { min: -5, max: 5, begin_color: 'blue', end_color: 'red' },
+    knowledge: { min: 0, max: 10, begin_color: 'white', end_color: 'red' },
+    secret: { min: -10, max: 0, begin_color: 'blue', end_color: 'white' },
+    social_rules: { min: -10, max: 0, begin_color: 'blue', end_color: 'white' },
+    financial_and_material_benefits: { min: -5, max: 5, begin_color: 'blue', end_color: 'red' },
+    goal: { min: 0, max: 10, begin_color: 'white', end_color: 'red' }
+};
+
+export const rewardDiagram = ({ scores }: { scores?: Rewards }) => {
+    const effectiveScores = { ...defaultRewards, ...scores };
+
+    return (
+        <div className="rounded-lg drop-shadow-md hover:bg-slate-300 bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
+        <div className="flex-col">
+            {Object.keys(effectiveScores).map((key, index) => {
+            if (key === 'overall_score') return null;
+
+            const { min, max, begin_color, end_color } = rewardProperties[key] || {};
+
+            return (
+                <RewardBar
+                key={index}
+                label={key}
+                value={effectiveScores[key as keyof Rewards]}
+                min={min}
+                max={max}
+                begin_color={begin_color}
+                end_color={end_color}
+                />
+            );
+            })}
+        </div>
+        </div>
+    );
+};
+
+
+
+
         
 export interface ScoresCommentsData {
     terminated_reason: string;
