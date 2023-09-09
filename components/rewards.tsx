@@ -22,7 +22,7 @@ const RewardBar = ({
     min,
     max,
     begin_color,
-    end_color
+    end_color,
 }: {
     label: string;
     value: number;
@@ -34,30 +34,34 @@ const RewardBar = ({
     <div>
         <p className="small-caps">{label}</p>
         <div className="h-5 w-full p-1">
-        <div className="flex h-full items-center">
-            <div className="w-[10rem] px-2 text-right">{min}</div>
-            <div
-                style={{
-                    width: "66rem",
-                    background: `linear-gradient(to right, ${begin_color}, ${end_color})`
-                }}
-                className="relative h-full"
-            >
-            <div className="absolute left-0 top-0 h-full w-full">
-                <div className="group relative">
+            <div className="flex h-full items-center">
+                <div className="w-[10rem] px-2 text-right">{min}</div>
                 <div
-                    className="absolute -top-1 h-6 w-1 bg-black"
-                    style={{ left: `${((value - min) / (max - min)) * 100}%` }}
+                    style={{
+                        width: '66rem',
+                        background: `linear-gradient(to right, ${begin_color}, ${end_color})`,
+                    }}
+                    className="relative h-full"
                 >
-                    <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">
-                    {value}
+                    <div className="absolute left-0 top-0 h-full w-full">
+                        <div className="group relative">
+                            <div
+                                className="absolute -top-1 h-6 w-1 bg-black"
+                                style={{
+                                    left: `${
+                                        ((value - min) / (max - min)) * 100
+                                    }%`,
+                                }}
+                            >
+                                <div className="-translate-x-30 absolute -top-8 left-1/2 hidden rounded bg-black px-2 py-1 text-sm text-white group-hover:block">
+                                    {value}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                </div>
+                <div className="w-[10rem] px-2">{max}</div>
             </div>
-            </div>
-            <div className="w-[10rem] px-2">{max}</div>
-        </div>
         </div>
     </div>
 );
@@ -70,7 +74,7 @@ const defaultRewards: rewards = {
     social_rules: -8,
     financial_and_material_benefits: 4,
     goal: 2,
-    overall_score: 3
+    overall_score: 3,
 };
 
 const rewardProperties: Record<string, RewardProperties> = {
@@ -79,44 +83,46 @@ const rewardProperties: Record<string, RewardProperties> = {
     knowledge: { min: 0, max: 10, begin_color: 'white', end_color: 'red' },
     secret: { min: -10, max: 0, begin_color: 'blue', end_color: 'white' },
     social_rules: { min: -10, max: 0, begin_color: 'blue', end_color: 'white' },
-    financial_and_material_benefits: { min: -5, max: 5, begin_color: 'blue', end_color: 'red' },
-    goal: { min: 0, max: 10, begin_color: 'white', end_color: 'red' }
+    financial_and_material_benefits: {
+        min: -5,
+        max: 5,
+        begin_color: 'blue',
+        end_color: 'red',
+    },
+    goal: { min: 0, max: 10, begin_color: 'white', end_color: 'red' },
 };
 
-export const rewardDiagram = (scores: rewards ) => {
+export const rewardDiagram = (scores: rewards) => (
+        <div className="rounded-lg bg-slate-200 px-4 pb-4 pt-1 drop-shadow-md hover:bg-slate-300 dark:bg-black dark:text-white">
+            <div className="flex-col">
+                {Object.keys(scores).map((key, index) => {
+                    if (key === 'overall_score') return null;
 
-    return (
-        <div className="rounded-lg drop-shadow-md hover:bg-slate-300 bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
-        <div className="flex-col">
-            {Object.keys(scores).map((key, index) => {
-            if (key === 'overall_score') return null;
+                    const { min, max, begin_color, end_color } =
+                        rewardProperties[key] || {};
 
-            const { min, max, begin_color, end_color } = rewardProperties[key] || {};
-
-            return (
-                <RewardBar
-                key={index}
-                label={key}
-                value={scores[key as keyof rewards]}
-                min={min}
-                max={max}
-                begin_color={begin_color}
-                end_color={end_color}
-                />
-            );
-            })}
-        </div>
+                    return (
+                        <RewardBar
+                            key={index}
+                            label={key}
+                            value={scores[key as keyof rewards]}
+                            min={min}
+                            max={max}
+                            begin_color={begin_color}
+                            end_color={end_color}
+                        />
+                    );
+                })}
+            </div>
         </div>
     );
-};
-
 
 export interface ScoresCommentsData {
     terminated_reason: string;
     agent1_comment: string;
     agent2_comment: string;
-  }
-  
+}
+
 export const parseReasoning = (text: string): ScoresCommentsData => {
     const interactionData: ScoresCommentsData = {
         terminated_reason: '',
@@ -126,25 +132,31 @@ export const parseReasoning = (text: string): ScoresCommentsData => {
     if (text === null) {
         // If text is null, return an empty ScoresCommentsData
         return interactionData;
-      }
-  
+    }
+
     // Extracting "terminated reason"
-    const terminatedReasonMatch = text.match(/terminated reason:\s*([\s\S]*?)(?=\w+:|$)/i);
+    const terminatedReasonMatch = text.match(
+        /terminated reason:\s*([\s\S]*?)(?=\w+:|$)/i,
+    );
     if (terminatedReasonMatch) {
-      interactionData.terminated_reason = terminatedReasonMatch[1].trim();
+        interactionData.terminated_reason = terminatedReasonMatch[1].trim();
     }
-  
+
     // Extracting "Agent 1's comment"
-    const agent1CommentMatch = text.match(/Agent 1 comments:\s*([\s\S]*?)(?=Agent 2 comments:|$)/i);
+    const agent1CommentMatch = text.match(
+        /Agent 1 comments:\s*([\s\S]*?)(?=Agent 2 comments:|$)/i,
+    );
     if (agent1CommentMatch) {
-      interactionData.agent1_comment = agent1CommentMatch[1].trim();
+        interactionData.agent1_comment = agent1CommentMatch[1].trim();
     }
-  
+
     // Extracting "Agent 2' comment"
-    const agent2CommentMatch = text.match(/Agent 2 comments:\s*([\s\S]*?)(?=$)/i);
+    const agent2CommentMatch = text.match(
+        /Agent 2 comments:\s*([\s\S]*?)(?=$)/i,
+    );
     if (agent2CommentMatch) {
-      interactionData.agent2_comment = agent2CommentMatch[1].trim();
+        interactionData.agent2_comment = agent2CommentMatch[1].trim();
     }
-  
+
     return interactionData;
-  };
+};
