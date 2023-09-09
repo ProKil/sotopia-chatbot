@@ -14,7 +14,7 @@ import { Separator } from '@radix-ui/react-dropdown-menu'
 import { useEffect, useState } from 'react'
 
 import '@fortawesome/react-fontawesome'
-import { Character, characterCard, getAvatar } from '@/components/character'
+import CharacterCard, { Character,} from '@/components/character'
 import { ScoresCommentsData, parseReasoning, rewardDiagram, rewards } from '@/components/rewards'
 import { ScenarioData, parseScenarioData } from '@/components/scenario'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -264,16 +264,16 @@ export default function ChatPage({ params }: ChatPageProps) {
                 <div className="col-start-3 col-span-8 rounded-md bg-lime-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                     <h1 className="text-center font-sans text-xl italic">{scenario.scenario}</h1>
                 </div>
-                <div className="col-span-4 col-start-3">
-                    {characterCard(agent1)}
+                <div className="col-span-4 col-start-3 px-5">
+                    {CharacterCard(agent1)}
                     <div className="p-5">
                     <div className="p-3 rounded-md bg-slate-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                         <h1 className="text-center font-sans text-md">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent1Goal}</h1>
                 </div>
                 </div>
                 </div>
-                <div className="col-span-4 col-start-7">
-                    {characterCard(agent2)}
+                <div className="col-span-4 col-start-7 px-5">
+                    {CharacterCard(agent2)}
                     <div className="p-5">
                     <div className="p-3 rounded-md bg-slate-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                         <h1 className="text-center font-sans text-md">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent2Goal}</h1>

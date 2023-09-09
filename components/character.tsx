@@ -132,26 +132,71 @@ export function getAvatar(agentName: string, width = 100, height = 100) {
     />
   );
 }
-  
-export const characterCard = ( 
-    agent: Character
-) => (
-          <div className="rounded-lg drop-shadow-md bg-white px-4 pb-4 pt-1 dark:bg-black dark:text-white">
-            <div className="pb-2 pl-2 pr-2" data-testid="card">
-              <div className="flex flex-row pt-2">
-                <div className="relative h-[50px] w-[50px] rounded-md border-[1px] border-gray-400 shadow-lg">
-                  <div className="absolute inset-0 flex items-center justify-center">
-            {getAvatar(agent.first_name+" "+agent.last_name)}
-                  </div>
-                </div>
-                <div className="px-2">
-                    <p className="text-left text-xl font-bold leading-6 text-gray-900">{agent.first_name} {agent.last_name}</p>
-                  <p className="font-lg text-left font-extralight leading-6 text-gray-600">
-                    {agent.occupation} · {agent.gender_pronoun} · {agent.age}
-                  </p>
-                </div>
-              </div>
-              <h3 className="flex pt-2">
+
+import * as React from "react";
+import { styled } from "@mui/material/styles";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import Avatar from "@mui/material/Avatar";
+import IconButton, { IconButtonProps } from "@mui/material/IconButton";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+interface ExpandMoreProps extends IconButtonProps {
+  expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  transform: !expand ? "rotate(0deg)" : "rotate(180deg)",
+  marginLeft: "auto",
+  transition: theme.transitions.create("transform", {
+    duration: theme.transitions.duration.shortest
+  })
+}));
+
+export default function CharacterCard(agent: Character) {
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  return (
+    <Card>
+      <CardHeader sx={{pb: 0}}
+        avatar={
+          <div className="relative h-[50px] w-[50px] rounded-md border-[1px] border-gray-400 shadow-lg">
+          <div className="absolute inset-0 flex items-center justify-center">
+    {getAvatar(agent.first_name+" "+agent.last_name)}
+          </div>
+        </div>
+        }
+        title={<p className="text-left text-xl font-bold leading-6 text-gray-900">{agent.first_name} {agent.last_name}</p>}
+        subheader={<p className="font-lg text-lg text-left font-extralight leading-6 text-gray-600">
+        {agent.occupation} · {agent.gender_pronoun} · {agent.age}
+      </p>}
+      />
+
+      <CardActions sx={{padding:0, maxHeight:20}} disableSpacing >
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          <ExpandMoreIcon/>
+        </ExpandMore>
+      </CardActions>
+
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent sx={{pt:0}}>
+              <h3 className="flex pt-0">
                 <span className="text-left font-light">{agent.personality_and_values}</span>
               </h3>
               <h3 className="flex">
@@ -168,8 +213,8 @@ export const characterCard = (
                   </div>
                 </li>
               </ul>
-            </div>
-          </div>
-        );
-
-
+        </CardContent>
+      </Collapse>
+    </Card>
+  );
+}
