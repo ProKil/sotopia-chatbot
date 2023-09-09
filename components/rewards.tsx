@@ -14,6 +14,7 @@ type RewardProperties = {
     max: number;
     begin_color: string;
     end_color: string;
+    mid_color?: string;
 };
 
 const RewardBar = ({
@@ -22,7 +23,8 @@ const RewardBar = ({
     min,
     max,
     begin_color,
-    end_color
+    end_color,
+    mid_color,
 }: {
     label: string;
     value: number;
@@ -30,6 +32,7 @@ const RewardBar = ({
     max: number;
     begin_color: string;
     end_color: string;
+    mid_color?: string;
 }) => (
     <div>
         <p className="small-caps">{label}</p>
@@ -39,14 +42,18 @@ const RewardBar = ({
             <div
                 style={{
                     width: "66rem",
-                    background: `linear-gradient(to right, ${begin_color}, ${end_color})`
+                    background: `linear-gradient(to right, ${
+                        mid_color
+                            ? `${begin_color}, ${mid_color}, ${end_color}`
+                            : `${begin_color}, ${end_color}`
+                    })`,
                 }}
-                className="relative h-full"
+                className="relative h-full rounded-sm"
             >
             <div className="absolute left-0 top-0 h-full w-full">
                 <div className="group relative">
                 <div
-                    className="absolute -top-1 h-6 w-1 bg-black"
+                    className="absolute -top-0.5 h-4 w-1 rounded-2xl bg-black group-hover:bg-slate-700 transition-all duration-200"
                     style={{ left: `${((value - min) / (max - min)) * 100}%` }}
                 >
                     <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">
@@ -74,24 +81,24 @@ const defaultRewards: rewards = {
 };
 
 const rewardProperties: Record<string, RewardProperties> = {
-    believability: { min: 0, max: 10, begin_color: 'white', end_color: 'red' },
-    relationship: { min: -5, max: 5, begin_color: 'blue', end_color: 'red' },
-    knowledge: { min: 0, max: 10, begin_color: 'white', end_color: 'red' },
-    secret: { min: -10, max: 0, begin_color: 'blue', end_color: 'white' },
-    social_rules: { min: -10, max: 0, begin_color: 'blue', end_color: 'white' },
-    financial_and_material_benefits: { min: -5, max: 5, begin_color: 'blue', end_color: 'red' },
-    goal: { min: 0, max: 10, begin_color: 'white', end_color: 'red' }
+    believability: { min: 0, max: 10, begin_color: '#d1fae5',end_color: '#84cc16' },
+    relationship: { min: -5, max: 5, begin_color: '#38bdf8', mid_color:'#d1fae5', end_color: '#84cc16' },
+    knowledge: { min: 0, max: 10, begin_color: '#d1fae5',end_color: '#84cc16' },
+    secret: { min: -10, max: 0, begin_color: '#38bdf8',end_color: '#d1fae5' },
+    social_rules: { min: -10, max: 0, begin_color: '#38bdf8', end_color: '#d1fae5' },
+    financial_and_material_benefits: { min: -5, max: 5, begin_color: '#38bdf8', mid_color:'#d1fae5', end_color: '#84cc16' },
+    goal: { min: 0, max: 10, begin_color: '#d1fae5', end_color: '#84cc16' }
 };
 
 export const rewardDiagram = (scores: rewards ) => {
 
     return (
-        <div className="rounded-lg drop-shadow-md hover:bg-slate-300 bg-slate-200 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
+        <div className="rounded-lg drop-shadow-md hover:bg-slate-200 bg-slate-100 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
         <div className="flex-col">
             {Object.keys(scores).map((key, index) => {
             if (key === 'overall_score') return null;
 
-            const { min, max, begin_color, end_color } = rewardProperties[key] || {};
+            const { min, max, begin_color, end_color, mid_color } = rewardProperties[key] || {};
 
             return (
                 <RewardBar
@@ -101,6 +108,7 @@ export const rewardDiagram = (scores: rewards ) => {
                 min={min}
                 max={max}
                 begin_color={begin_color}
+                {...(mid_color && { mid_color })}
                 end_color={end_color}
                 />
             );

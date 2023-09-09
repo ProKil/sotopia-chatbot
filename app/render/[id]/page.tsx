@@ -14,7 +14,7 @@ import { Separator } from '@radix-ui/react-dropdown-menu'
 import { useEffect, useState } from 'react'
 
 import '@fortawesome/react-fontawesome'
-import { Character, characterCard } from '@/components/character'
+import { Character, characterCard, getAvatar } from '@/components/character'
 import { ScoresCommentsData, parseReasoning, rewardDiagram, rewards } from '@/components/rewards'
 import { ScenarioData, parseScenarioData } from '@/components/scenario'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -261,13 +261,13 @@ export default function ChatPage({ params }: ChatPageProps) {
         <div className={cn('grid grid-cols-12 gap-6 pb-[200px] px-60 pt-4 md:pt-10')}>
                 
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-                <div className="col-start-3 col-span-8 rounded-md bg-gray-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                <div className="col-start-3 col-span-8 rounded-md bg-lime-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                     <h1 className="text-center font-sans text-xl italic">{scenario.scenario}</h1>
                 </div>
                 <div className="col-span-4 col-start-3">
                     {characterCard(agent1)}
                     <div className="p-5">
-                    <div className="p-3 rounded-md bg-gray-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                    <div className="p-3 rounded-md bg-slate-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                         <h1 className="text-center font-sans text-md">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent1Goal}</h1>
                 </div>
                 </div>
@@ -275,7 +275,7 @@ export default function ChatPage({ params }: ChatPageProps) {
                 <div className="col-span-4 col-start-7">
                     {characterCard(agent2)}
                     <div className="p-5">
-                    <div className="p-3 rounded-md bg-gray-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                    <div className="p-3 rounded-md bg-slate-200 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                         <h1 className="text-center font-sans text-md">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent2Goal}</h1>
                     </div>
                     </div>
@@ -294,7 +294,12 @@ export default function ChatPage({ params }: ChatPageProps) {
 
             <div className="col-span-5 col-start-2 pt-8">
                 <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
+                {/* <div className="flex items-center justify-between">
+                        <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
+                        {getAvatar(agent1.first_name + " " + agent1.last_name, 40, 40)}
+                </div> */}
                     <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
+                    <p className="text-center text-sm font-sans italic">Role-played character: {agent1.first_name} {agent1.last_name}</p>
                 </div>
                 {rewardDiagram(getAgentOneRewards(rewards))}
                 {RawScoresReasoning(getAgentOneRewards(rewards), reasoning_data.agent1_comment)}
@@ -303,6 +308,7 @@ export default function ChatPage({ params }: ChatPageProps) {
             <div className="col-span-5 pt-8">
                 <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
                     <h1 className="text-center text-xl font-sans">Scores for Agent2</h1>
+                    <p className="text-center text-sm font-sans italic">Role-played character: {agent2.first_name} {agent2.last_name}</p>
                 </div>
                 {rewardDiagram(getAgentTwoRewards(rewards))}
                 {RawScoresReasoning(getAgentTwoRewards(rewards), reasoning_data.agent2_comment)}
