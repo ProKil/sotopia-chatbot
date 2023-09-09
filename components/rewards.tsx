@@ -41,7 +41,7 @@ const RewardBar = ({
             <div className="w-[10rem] px-2 text-right">{min}</div>
             <div
                 style={{
-                    width: "66rem",
+                    width: '66rem',
                     background: `linear-gradient(to right, ${
                         mid_color
                             ? `${begin_color}, ${mid_color}, ${end_color}`
@@ -53,10 +53,10 @@ const RewardBar = ({
             <div className="absolute left-0 top-0 h-full w-full">
                 <div className="group relative">
                 <div
-                    className="absolute -top-0.5 h-4 w-1 rounded-2xl bg-black group-hover:bg-slate-700 transition-all duration-200"
+                    className="absolute -top-0.5 h-4 w-1 rounded-2xl bg-black transition-all duration-200 group-hover:bg-slate-700"
                     style={{ left: `${((value - min) / (max - min)) * 100}%` }}
                 >
-                    <div className="-translate-x-30 absolute -top-8 left-1/2 hidden transform rounded bg-black px-2 py-1 text-sm text-white group-hover:block">
+                    <div className="-translate-x-30 absolute -top-8 left-1/2 hidden rounded bg-black px-2 py-1 text-sm text-white group-hover:block">
                     {value}
                     </div>
                 </div>
@@ -93,7 +93,7 @@ const rewardProperties: Record<string, RewardProperties> = {
 export const rewardDiagram = (scores: rewards ) => {
 
     return (
-        <div className="rounded-lg drop-shadow-md hover:bg-slate-200 bg-slate-100 px-4 pb-4 pt-1 dark:bg-black dark:text-white">
+        <div className="rounded-lg bg-slate-100 px-4 pb-4 pt-1 drop-shadow-md hover:bg-slate-200 dark:bg-black dark:text-white">
         <div className="flex-col">
             {Object.keys(scores).map((key, index) => {
             if (key === 'overall_score') return null;
