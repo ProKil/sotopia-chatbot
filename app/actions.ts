@@ -6,6 +6,7 @@ import { kv } from '@vercel/kv'
 
 import { auth } from '@/auth'
 import { type Chat } from '@/lib/types'
+import { Message } from 'ai'
 
 export async function getChats(userId?: string | null) {
   if (!userId) {
@@ -75,7 +76,7 @@ export async function clearChats() {
 
   const chats: string[] = await kv.zrange(`user:chat:${session.user.id}`, 0, -1)
   if (!chats.length) {
-  return redirect('/')
+    return redirect('/')
   }
   const pipeline = kv.pipeline()
 
@@ -117,4 +118,45 @@ export async function shareChat(chat: Chat) {
   await kv.hmset(`chat:${chat.id}`, payload)
 
   return payload
+}
+
+declare type UpdateChatOptions = {
+  id: string
+  messages: Message[]
+  response_string: string
+}
+
+export async function updateChat({
+  id,
+  messages,
+  response_string
+}: UpdateChatOptions) {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    return {
+      error: 'Unauthorized'
+    }
+  }
+  const userId = session.user.id
+  const createdAt = Date.now()
+  const payload = {
+    id,
+    title: messages[0].content.substring(0, 100),
+    userId: userId,
+    createdAt,
+    path: `/chat/${id}`,
+    messages: [
+      ...messages,
+      {
+        content: response_string,
+        role: 'assistant'
+      }
+    ]
+  }
+  await kv.hmset(`chat:${id}`, payload)
+  await kv.zadd(`user:chat:${userId}`, {
+    score: createdAt,
+    member: `chat:${id}`
+  })
 }

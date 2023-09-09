@@ -2,6 +2,7 @@
 
 import { type Message } from 'ai/react'
 import { useChat } from '@/components/use-chat'
+// import { useChat } from 'ai/react'
 
 import { cn } from '@/lib/utils'
 import { ChatList } from '@/components/chat-list'
@@ -17,10 +18,11 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 const IS_PREVIEW = process.env.VERCEL_ENV === 'preview'
 export interface ChatProps extends React.ComponentProps<'div'> {
@@ -52,14 +54,18 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   return (
     <>
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
-        {messages.length ? (
+        {/* {messages.length ? (
           <>
             <ChatList messages={messages} />
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
         ) : (
           <EmptyScreen setInput={setInput} />
-        )}
+        )} */}
+        <>
+          <ChatList messages={messages} />
+          <ChatScrollAnchor trackVisibility={isLoading} />
+        </>
       </div>
       <ChatPanel
         id={id}

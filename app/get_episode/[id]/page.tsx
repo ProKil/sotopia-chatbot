@@ -19,5 +19,5 @@ export interface ChatPageProps {
 }
 
 export default async function ChatPage({ params }: ChatPageProps) {
-    redirect(process.env.SOTOPIA_SERVER_URL + "get_episode/" + params.id)
+  redirect(process.env.SOTOPIA_SERVER_URL + 'get_episode/' + params.id)
 }

@@ -11,19 +11,19 @@ import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from './chat-message-actions-history'
 
 export declare type Message = {
-    id: string;
-    createdAt?: Date;
-    content: string;
-    role: 'system' | 'user' | 'assistant' | 'character';
-    type?: 'speak' | 'action' | 'non-verbal communication' | 'leave';
-    additional_info?: string; // a footnote for the message
-};
+  id: string
+  createdAt?: Date
+  content: string
+  role: 'system' | 'user' | 'assistant' | 'character'
+  type?: 'speak' | 'action' | 'non-verbal communication' | 'leave'
+  additional_info?: string // a footnote for the message
+}
 export declare type CreateMessage = {
-    id?: string;
-    createdAt?: Date;
-    content: string;
-    role: 'system' | 'user' | 'assistant' | 'character';
-};
+  id?: string
+  createdAt?: Date
+  content: string
+  role: 'system' | 'user' | 'assistant' | 'character'
+}
 
 export interface ChatMessageProps {
   message: Message
@@ -33,48 +33,50 @@ export function getInitials(fullName: string) {
   // Check if the input is a non-empty string
   if (typeof fullName === 'string' && fullName.trim() !== '') {
     // Split the full name into first and last names
-    const names = fullName.trim().split(' ');
-    
+    const names = fullName.trim().split(' ')
+
     if (names.length >= 2) {
       // Get the first character of the first name and the last character of the last name
-      const firstInitial = names[0][0].toUpperCase();
-      const lastInitial = names[names.length - 1][0].toUpperCase();
-      
+      const firstInitial = names[0][0].toUpperCase()
+      const lastInitial = names[names.length - 1][0].toUpperCase()
+
       // Return both initials together
-      return `${firstInitial}${lastInitial}`;
+      return `${firstInitial}${lastInitial}`
     }
   }
-  
+
   // Handle invalid input or single names
-  return null; // You can also return an empty string or another value as needed.
+  return null // You can also return an empty string or another value as needed.
 }
 
-export function getMessageClass(messageType: string|undefined) {
+export function getMessageClass(messageType: string | undefined) {
   switch (messageType) {
-      case 'action':
-          return 'bg-blue-200';
-      case 'non-verbal communication':
-          return 'bg-green-200';
-      case 'leave':
-          return 'rounded-md shadow-sm bg-yellow-200';
-      default:
-          return ''; 
+    case 'action':
+      return 'bg-blue-200'
+    case 'non-verbal communication':
+      return 'bg-green-200'
+    case 'leave':
+      return 'rounded-md shadow-sm bg-yellow-200'
+    default:
+      return ''
   }
 }
 
 function showAdditionalInfo(message: Message) {
   if (message.additional_info) {
     return (
-      <div className="text-left text-xs text-gray-400">{message.additional_info}</div>
+      <div className="text-left text-xs text-gray-400">
+        {message.additional_info}
+      </div>
     )
-  } else return ""
+  } else return ''
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
   const msgStyles = [
-    "ml-4 flex-1 space-y-2 overflow-hidden px-1",
+    'ml-4 flex-1 space-y-2 overflow-hidden px-1',
     getMessageClass(message.type)
-]
+  ]
   return (
     <div
       className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -88,9 +90,15 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             : 'bg-primary text-primary-foreground'
         )}
       >
-        {message.role === 'user' ? <IconUser /> : (message.role === 'character' ? <>{getInitials(message.id)}</> : <IconOpenAI />)}
+        {message.role === 'user' ? (
+          <IconUser />
+        ) : message.role === 'character' ? (
+          <>{getInitials(message.id)}</>
+        ) : (
+          <IconOpenAI />
+        )}
       </div>
-      <div className={msgStyles.join(" ")}>
+      <div className={msgStyles.join(' ')}>
         <MemoizedReactMarkdown
           className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
           remarkPlugins={[remarkGfm, remarkMath]}
