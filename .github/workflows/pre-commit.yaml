@@ -13,6 +13,6 @@ jobs:
     - name: Install dependencies
       run: |
         pnpm install
-    - name: Run pre-commit
+    - name: Run precommit
       run: |
-        pnpm run pre-commit
+        pnpm run precommit
