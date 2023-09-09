@@ -1,7 +1,6 @@
 'use client';
 
-import '@fortawesome/react-fontawesome';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { get } from 'https';
 import { type Metadata } from 'next';
@@ -10,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 import { getChat } from '@/app/actions';
 import { auth } from '@/auth';
-import { Character, characterCard } from '@/components/character';
+import CharacterCard, { Character, } from '@/components/character';
 import { ChatProps } from '@/components/chat';
 import { ChatList } from '@/components/chat-list-history';
 import { Message } from '@/components/chat-message-history';
@@ -257,109 +256,83 @@ export default function ChatPage({ params }: ChatPageProps) {
     const [messages_context, setMessagesContext] = useState<any>(null);
     const [rewards, setRewards] = useState<any>(null);
     const [reasoning, setReasoning] = useState<any>(null);
-    const [agent1, setAgent1] = useState<Character>(getEmptyCharacter());
-    const [agent2, setAgent2] = useState<Character>(getEmptyCharacter());
-    const [scenario, setScenario] = useState<ScenarioData>(
-        getEmptyScenarioData(),
-    );
+    const [agent1, setAgent1] = useState<Character>(getEmptyCharacter());;
+    const [agent2, setAgent2] = useState<Character>(getEmptyCharacter());;
+    const [scenario, setScenario] = useState<ScenarioData>(getEmptyScenarioData());;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const {
-                messages,
-                messages_context,
-                rewards,
-                reasoning,
-                agent1,
-                agent2,
-                scenario,
-            } = await getEpisode(params.id);
-            setMessages(messages);
-            setMessagesContext(messages_context);
-            setRewards(rewards);
-            setReasoning(reasoning);
-            setAgent1(agent1);
-            setAgent2(agent2);
-            setScenario(scenario);
-        };
-        fetchData().catch(console.error);
-    }, [params.id]);
+    useEffect(
+        () => {
+            const fetchData = async () => {
+                const { messages, messages_context, rewards, reasoning, agent1, agent2, scenario } = await getEpisode(params.id);
+                setMessages(messages);
+                setMessagesContext(messages_context);
+                setRewards(rewards);
+                setReasoning(reasoning);
+                setAgent1(agent1);
+                setAgent2(agent2);
+                setScenario(scenario);
+            };
+            fetchData().catch(console.error);
+        },
+        []
+    );
     console.log(messages);
     const reasoning_data = parseReasoning(reasoning);
     return (
-        <div
-            className={cn(
-                'grid grid-cols-12 gap-6 px-60 pb-[200px] pt-4 md:pt-10',
-            )}
-        >
-            <link
-                rel="stylesheet"
-                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-            />
-            <div className="col-span-8 col-start-3 rounded-md bg-gray-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
-                <h1 className="text-center font-sans text-xl italic">
-                    {scenario.scenario}
-                </h1>
-            </div>
-            <div className="col-span-4 col-start-3">
-                {characterCard(agent1)}
-                <div className="p-5">
-                    <div className="rounded-md bg-gray-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
-                        <h1 className="text-md text-center font-sans">
-                            Goal <i className="fa-solid fa-bullseye"></i>:{' '}
-                            {scenario.agent1Goal}
-                        </h1>
+        <div className={cn('grid grid-cols-12 gap-6 px-60 pb-[200px] pt-4 md:pt-10')}>
+                
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+                <div className="col-span-8 col-start-3 rounded-md bg-lime-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                    <h1 className="text-center font-sans text-xl italic">{scenario.scenario}</h1>
+                </div>
+                <div className="col-span-4 col-start-3 px-5">
+                    {CharacterCard(agent1)}
+                    <div className="p-5">
+                    <div className="rounded-md bg-slate-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                        <h1 className="text-md text-center font-sans">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent1Goal}</h1>
+                </div>
+                </div>
+                </div>
+                <div className="col-span-4 col-start-7 px-5">
+                    {CharacterCard(agent2)}
+                    <div className="p-5">
+                    <div className="rounded-md bg-slate-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                        <h1 className="text-md text-center font-sans">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent2Goal}</h1>
+                    </div>
                     </div>
                 </div>
-            </div>
-            <div className="col-span-4 col-start-7">
-                {characterCard(agent2)}
-                <div className="p-5">
-                    <div className="rounded-md bg-gray-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
-                        <h1 className="text-md text-center font-sans">
-                            Goal <i className="fa-solid fa-bullseye"></i>:{' '}
-                            {scenario.agent2Goal}
-                        </h1>
-                    </div>
-                </div>
+
+            <div className='col-span-12'>
+            <ChatList  messages={messages} />
             </div>
 
-            <div className="col-span-12">
-                <ChatList messages={messages} />
+            <div className='col-span-10 col-start-2 justify-items-center pt-20'>
+            <div className="rounded-md bg-lime-400 p-3 text-center drop-shadow-md">
+                <h1 className="text-4xl">Automatic Evaluation</h1>
+                <IconOpenAI className="mx-auto mt-4 h-16 w-16" />
             </div>
-
-            <div className="col-span-10 col-start-2 justify-items-center pt-20">
-                <div className="rounded-md bg-lime-400 p-3 text-center drop-shadow-md">
-                    <h1 className="text-4xl">Automatic Evaluation</h1>
-                    <IconOpenAI className="mx-auto mt-4 h-16 w-16" />
-                </div>
             </div>
 
             <div className="col-span-5 col-start-2 pt-8">
                 <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
-                    <h1 className="text-center font-sans text-xl">
-                        Scores for Agent1
-                    </h1>
+                {/* <div className="flex items-center justify-between">
+                        <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
+                        {getAvatar(agent1.first_name + " " + agent1.last_name, 40, 40)}
+                </div> */}
+                    <h1 className="text-center font-sans text-xl">Scores for Agent1</h1>
+                    <p className="text-center font-sans text-sm italic">Role-played character: {agent1.first_name} {agent1.last_name}</p>
                 </div>
                 {rewardDiagram(getAgentOneRewards(rewards))}
-                {RawScoresReasoning(
-                    getAgentOneRewards(rewards),
-                    reasoning_data.agent1_comment,
-                )}
+                {RawScoresReasoning(getAgentOneRewards(rewards), reasoning_data.agent1_comment)}
             </div>
 
             <div className="col-span-5 pt-8">
                 <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
-                    <h1 className="text-center font-sans text-xl">
-                        Scores for Agent2
-                    </h1>
+                    <h1 className="text-center font-sans text-xl">Scores for Agent2</h1>
+                    <p className="text-center font-sans text-sm italic">Role-played character: {agent2.first_name} {agent2.last_name}</p>
                 </div>
                 {rewardDiagram(getAgentTwoRewards(rewards))}
-                {RawScoresReasoning(
-                    getAgentTwoRewards(rewards),
-                    reasoning_data.agent2_comment,
-                )}
+                {RawScoresReasoning(getAgentTwoRewards(rewards), reasoning_data.agent2_comment)}
             </div>
-        </div>
-    );
+        </div>);
 }
