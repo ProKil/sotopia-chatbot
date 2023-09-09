@@ -9,6 +9,7 @@ import { CodeBlock } from '@/components/ui/codeblock'
 import { MemoizedReactMarkdown } from '@/components/markdown'
 import { IconOpenAI, IconUser } from '@/components/ui/icons'
 import { ChatMessageActions } from './chat-message-actions-history'
+import { getAvatar } from './character'
 
 export declare type Message = {
     id: string;
@@ -85,10 +86,10 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
           'flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow',
           message.role === 'user'
             ? 'bg-background'
-            : 'bg-primary text-primary-foreground'
+            : 'bg-slate-300 dark:bg-gray-800'
         )}
       >
-        {message.role === 'user' ? <IconUser /> : (message.role === 'character' ? <>{getInitials(message.id)}</> : <IconOpenAI />)}
+        {message.role === 'user' ? <IconUser /> : (message.role === 'character' ? <>{getAvatar(message.id)}</> : <IconOpenAI />)}
       </div>
       <div className={msgStyles.join(" ")}>
         <MemoizedReactMarkdown
