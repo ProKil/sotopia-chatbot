@@ -1,6 +1,7 @@
 'use client';
 
 import { type Message } from 'ai/react';
+import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -17,7 +18,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { useChat } from '@/components/use-chat';
+import { connectSession,useChat  } from '@/components/use-chat';
 import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 // import { useChat } from 'ai/react'
 import { cn } from '@/lib/utils';
@@ -40,10 +41,27 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const [previewTokenInput, setPreviewTokenInput] = useState(
         previewToken ?? '',
     );
+    const [sessionIdDialog, setSessionIdDialog] = useState(false);
+    const [sessionIdInput, setSessionIdInput] = useState<string>('');
+    const [sessionId, setSessionId] = useState<string>(id || '');
+    const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');   
+
+    useEffect(() => {
+        if (sessionId !== '') {
+            const _connectSession = async () => {
+                console.log('connecting to session ' + sessionId);
+                await connectSession(sessionId, 'client user');
+                console.log('connected to session ' + sessionId);
+                setHiddenOrNot('block');
+            };
+            _connectSession().catch(console.error);
+        }
+    }, [sessionId]);
+
     const { messages, append, reload, stop, isLoading, input, setInput } =
         useChat({
             initialMessages,
-            id,
+            id: sessionId,
             body: {
                 id,
                 previewToken,
@@ -57,19 +75,16 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     return (
         <>
             <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
-                {/* {messages.length ? (
+                {hiddenOrNot=== 'block' ? (
           <>
             <ChatList messages={messages} />
             <ChatScrollAnchor trackVisibility={isLoading} />
           </>
         ) : (
-          <EmptyScreen setInput={setInput} />
-        )} */}
-                <>
-                    <ChatList messages={messages} />
-                    <ChatScrollAnchor trackVisibility={isLoading} />
-                </>
+          <EmptyScreen setSessionIdDialog={setSessionIdDialog} />
+        )}
             </div>
+            <div className={hiddenOrNot}>
             <ChatPanel
                 id={id}
                 isLoading={isLoading}
@@ -80,6 +95,36 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
                 input={input}
                 setInput={setInput}
             />
+            </div>
+
+            <Dialog
+                open={sessionIdDialog}
+                onOpenChange={setSessionIdDialog}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Enter your Session ID</DialogTitle>
+                        <DialogDescription>
+                            Please check with your experimenter to acquire session ID.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Input
+                        value={sessionIdInput}
+                        placeholder="Open Session ID"
+                        onChange={(e) => setSessionIdInput(e.target.value)}
+                    />
+                    <DialogFooter className="items-center">
+                        <Button
+                            onClick={() => {
+                                setSessionId(sessionIdInput);
+                                setSessionIdDialog(false);
+                            }}
+                        >Enter Session</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+                
 
             <Dialog
                 open={previewTokenDialog}

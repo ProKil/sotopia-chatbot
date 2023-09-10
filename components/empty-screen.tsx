@@ -1,60 +1,52 @@
 import { UseChatHelpers } from 'ai/react';
+import { Dispatch, SetStateAction } from 'react';
 
 import { ExternalLink } from '@/components/external-link';
 import { Button } from '@/components/ui/button';
 import { IconArrowRight } from '@/components/ui/icons';
+import { Input } from '@/components/ui/input';
 
-const exampleMessages = [
-    {
-        heading: 'Explain technical concepts',
-        message: 'What is a "serverless function"?',
-    },
-    {
-        heading: 'Summarize an article',
-        message: 'Summarize the following article for a 2nd grader: \n',
-    },
-    {
-        heading: 'Draft an email',
-        message: 'Draft an email to my boss about the following: \n',
-    },
-];
+export interface EmptyScreenProps {
+    setSessionIdDialog: Dispatch<SetStateAction<boolean>>;
+}
 
-export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
+export function EmptyScreen( { setSessionIdDialog }: EmptyScreenProps) {
     return (
+        <>
         <div className="mx-auto max-w-2xl px-4">
             <div className="rounded-lg border bg-background p-8">
-                <h1 className="mb-2 text-lg font-semibold">
-                    Welcome to Next.js AI Chatbot!
+                <h1 className="mb-2 text-4xl font-thin">
+                    Sotopia,
+                    <pre className='text-right font-sans text-base font-normal'>a social AI experiment by Carnegie Mellon University</pre>
                 </h1>
-                <p className="mb-2 leading-normal text-muted-foreground">
-                    This is an open source AI chatbot app template built with{' '}
-                    <ExternalLink href="https://nextjs.org">
-                        Next.js
-                    </ExternalLink>{' '}
-                    and{' '}
-                    <ExternalLink href="https://vercel.com/storage/kv">
-                        Vercel KV
-                    </ExternalLink>
-                    .
+                <p className="prose-sm mb-2 leading-relaxed">
+                You are invited to participate in a research study aiming to study realistic
+                social interactions across contexts between AI agents and humans. This research 
+                is dedicated to bridging the gap between technology and humanlike
+                collabarotive interactions, ultimately paving the way for more
+                proficient and pro-social AI.
+
+                <br />
+                You will engage in an interaction with another agent,
+                following a provided social scenario, goals, and potential character
+                profiles. It&apos;s important to remember that you&apos;ll be taking on the role of a
+                specific character for this interaction, rather than responding as yourself.
+                
+                <br />
+                You must be at least 18 years old. Participation is voluntary.
+                You may discontinue participation at any time during the research
+                activity. 
+                
+                <br />
                 </p>
-                <p className="leading-normal text-muted-foreground">
-                    You can start a conversation here or try the following
-                    examples:
-                </p>
-                <div className="mt-4 flex flex-col items-start space-y-2">
-                    {exampleMessages.map((message, index) => (
-                        <Button
-                            key={index}
-                            variant="link"
-                            className="h-auto p-0 text-base"
-                            onClick={() => setInput(message.message)}
-                        >
-                            <IconArrowRight className="mr-2 text-muted-foreground" />
-                            {message.heading}
-                        </Button>
-                    ))}
+                <div className="text-center">
+                <Button  variant="link" onClick={()=>{window.print();}}>Print a copy of this consent form for your records.</Button> 
                 </div>
+                <div className='text-center'>
+                <Button variant="default" onClick={() => {setSessionIdDialog(true);}}>I am ready to start.</Button> 
+                </div>    
             </div>
         </div>
+        </>
     );
 }
