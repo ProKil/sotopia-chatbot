@@ -184,27 +184,7 @@ export function useChat({
                 mutate(chatRequest.messages, false);
 
                 await sendMessageToSession(chatId, 'client user', command).catch(console.error);
-
-                // const response_str = JSON.stringify(response);
-
-                // const err = await updateChat({
-                //     id: chatId,
-                //     messages: chatRequest.messages,
-                //     response_string: response_str,
-                // });
-
-                // if (err.error) {
-                //     throw err;
-                // }
-
-                // abortControllerRef.current = null;
-                // const responseMessage: Message = {
-                //     id: nanoid(),
-                //     role: 'assistant',
-                //     content: response_str,
-                // };
-
-                // mutate([...messagesRef.current, responseMessage], false);
+                
                 return chatRequest.messages[chatRequest.messages?.length - 1]
                     .content;
             } catch (err) {
