@@ -279,13 +279,13 @@ export default function ChatPage({ params }: ChatPageProps) {
     console.log(messages);
     const reasoning_data = parseReasoning(reasoning);
     return (
-        <div className={cn('grid grid-cols-12 gap-6 px-60 pb-[200px] pt-4 md:pt-10')}>
+        <div className={cn('grid grid-cols-12 gap-6 px-0 md:px-3 lg:px-10 xl:px-30 2xl:px-60 pb-[200px] pt-4 md:pt-10')}>
                 
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-                <div className="col-span-8 col-start-3 rounded-md bg-lime-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 rounded-md bg-lime-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                     <h1 className="text-center font-sans text-xl italic">{scenario.scenario}</h1>
                 </div>
-                <div className="col-span-4 col-start-3 px-5">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 xl:col-span-4 xl:col-start-3 xl:px-5">
                     {CharacterCard(agent1)}
                     <div className="p-5">
                     <div className="rounded-md bg-slate-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
@@ -293,7 +293,7 @@ export default function ChatPage({ params }: ChatPageProps) {
                 </div>
                 </div>
                 </div>
-                <div className="col-span-4 col-start-7 px-5">
+                <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 xl:col-start-7 xl:col-span-4 xl:px-5">
                     {CharacterCard(agent2)}
                     <div className="p-5">
                     <div className="rounded-md bg-slate-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
@@ -313,7 +313,7 @@ export default function ChatPage({ params }: ChatPageProps) {
             </div>
             </div>
 
-            <div className="col-span-5 col-start-2 pt-8">
+            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 xl:col-span-5 xl:col-start-2 pt-8">
                 <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
                 {/* <div className="flex items-center justify-between">
                         <h1 className="text-center text-xl font-sans">Scores for Agent1</h1>
@@ -326,7 +326,7 @@ export default function ChatPage({ params }: ChatPageProps) {
                 {RawScoresReasoning(getAgentOneRewards(rewards), reasoning_data.agent1_comment)}
             </div>
 
-            <div className="col-span-5 pt-8">
+            <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 xl:col-span-5 pt-8">
                 <div className="rounded-2xl p-4 dark:bg-black dark:text-white">
                     <h1 className="text-center font-sans text-xl">Scores for Agent2</h1>
                     <p className="text-center font-sans text-sm italic">Role-played character: {agent2.first_name} {agent2.last_name}</p>
