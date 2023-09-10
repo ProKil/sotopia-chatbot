@@ -10,5 +10,5 @@ export default function IndexPage() {
 
     // return redirect(`/chat/${id}`);
 
-    return <Chat id={id} />;
+    return <Chat/>;
 }
