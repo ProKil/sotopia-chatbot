@@ -56,9 +56,10 @@ function filterDidnothingMessages(messages: any[][]) {
         .flat();
 }
 
-function parseMessage(message: string): [string, string] {
-    const content = message;
+export function parseMessage(message: string): [string, string] {
+    const content = message.replace(/.*said:/, 'said:');
 
+    console.log(content);
     if (content.startsWith('said: "')) {
         return [content.substring(7, content.length - 1), 'speak'];
     } if (content.startsWith('[non-verbal communication]')) {
@@ -221,6 +222,8 @@ function getEmptyScenarioData(): ScenarioData {
         agent2: '',
         agent1Goal: '',
         agent2Goal: '',
+        agent1Background: '',
+        agent2Background: '',
     };
 }
 

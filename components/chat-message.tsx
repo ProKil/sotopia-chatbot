@@ -10,6 +10,9 @@ import { CodeBlock } from '@/components/ui/codeblock';
 import { IconOpenAI, IconUser } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
 
+import { getAvatar } from './character';
+import { clientSideAgent, serverSideAgent } from './chat-list';
+
 export interface ChatMessageProps {
     message: Message;
 }
@@ -65,10 +68,13 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                     'flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border shadow',
                     message.role === 'user'
                         ? 'bg-background'
+                        :
+                        message.role === 'assistant'
+                        ? 'bg-background'
                         : 'bg-primary text-primary-foreground',
                 )}
             >
-                {message.role === 'user' ? <IconUser /> : <IconOpenAI />}
+                {message.role === 'user' ? <>{getAvatar(clientSideAgent)}</> : message.role === 'assistant'? <>{getAvatar(serverSideAgent)}</> : <IconOpenAI />}
             </div>
             <div className={msgStyles.join(' ')}>
                 <MemoizedReactMarkdown
