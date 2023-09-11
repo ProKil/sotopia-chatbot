@@ -1,10 +1,14 @@
 import { type UseChatHelpers } from 'ai/react';
+import { useEffect, useState } from 'react';
 
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom';
 import { FooterText } from '@/components/footer';
 import { PromptForm } from '@/components/prompt-form';
 import { Button } from '@/components/ui/button';
 import { IconRefresh, IconStop } from '@/components/ui/icons';
+
+import { ActionSelection } from './action-selection';
+
 
 export interface ChatPanelProps
     extends Pick<
@@ -30,6 +34,7 @@ export function ChatPanel({
     setInput,
     messages,
 }: ChatPanelProps) {
+    const [actionType, setActionType] = useState('action');
     return (
         <div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
             <ButtonScrollToBottom />
@@ -58,6 +63,7 @@ export function ChatPanel({
                     )}
                 </div>
                 <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
+                    <ActionSelection setActionType={setActionType} actionType={actionType} />
                     <PromptForm
                         onSubmit={async (value) => {
                             await append({
@@ -70,7 +76,6 @@ export function ChatPanel({
                         setInput={setInput}
                         isLoading={isLoading}
                     />
-                    <FooterText className="hidden sm:block" />
                 </div>
             </div>
         </div>
