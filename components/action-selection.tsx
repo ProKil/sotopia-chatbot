@@ -29,7 +29,7 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         />
         <Label
         htmlFor="speak"
-        className="flex flex-col h-15 col-span-2 items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+        className="h-15 col-span-2 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
         <Mic className="mb-3 h-4 w-4" />
         Speak
@@ -43,7 +43,7 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         />
         <Label
         htmlFor="nvc"
-        className="flex flex-col h-15 col-span-2 items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+        className="h-15 col-span-2 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
         <Meh className="mb-3 h-4 w-4" />
         Face expression
@@ -57,9 +57,9 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         />
         <Label
         htmlFor="none"
-        className="flex flex-col h-10 w-30 col-span-3 items-center justify-between rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+        className="w-30 col-span-3 flex h-10 flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
-        <div className="flex flex-row gap-2 content-center items-center">
+        <div className="flex flex-row content-center items-center gap-2">
         <Ban className="my-1 h-4 w-4"/> No action
         </div>
         </Label>
@@ -72,9 +72,9 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         />
         <Label
         htmlFor="leave"
-        className="flex flex-col h-10 w-30 col-span-3 items-center content-center justify-between rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+        className="w-30 col-span-3 flex h-10 flex-col content-center items-center justify-between rounded-md border-2 border-muted bg-popover p-1 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
-        <div className="flex flex-row gap-2 content-center items-center">
+        <div className="flex flex-row content-center items-center gap-2">
         <PhoneOff className="my-1 h-4 w-4"/> Leave
         </div>
         </Label>
