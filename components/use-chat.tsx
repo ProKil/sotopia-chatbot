@@ -6,6 +6,10 @@ import useSWR, { KeyedMutator } from 'swr';
 
 import { updateChat } from '@/app/actions';
 
+import { MessageTransaction,SessionTransaction } from './sotopia-types';
+
+const API_URL = 'https://tiger.lti.cs.cmu.edu:8002';
+
 export type RequestOptions = {
     headers?: Record<string, string> | Headers;
     body?: object;
@@ -34,6 +38,62 @@ export interface SotopiaChatProps
     id?: string;
 }
 
+async function getSession(sessId: string): Promise<MessageTransaction[]> {
+    const response: Response = await fetch(
+        `${ API_URL}/get/${ sessId}`, 
+        { method: 'GET', cache: 'no-store' },
+    );
+    const session: MessageTransaction[] = await response.json();
+    return session;
+}
+
+export async function connectSession(sessId: string, senderId: string): Promise<MessageTransaction[]> {
+    const response: Response = await fetch(
+        `${ API_URL}/connect/${ sessId}/client/${ senderId}`, 
+        { method: 'POST', cache: 'no-store' },
+    );
+    const session: MessageTransaction[] = await response.json();
+    return session;
+}
+
+async function sendMessageToSession(sessId: string, senderId: string, message: string): Promise<MessageTransaction[]> {
+    const response: Response = await fetch(
+        `${ API_URL}/send/${ sessId}/${ senderId}`, 
+        { method: 'POST', cache: 'no-store', body: message },
+    );
+    const session: MessageTransaction[] = await response.json();
+    return session;
+}
+
+async function getClientLock(sessId: string): Promise<string> {
+    const response: Response = await fetch(
+        `${ API_URL}/get_lock/${ sessId}`, 
+        { method: 'GET', cache: 'no-store' },
+    );
+    const lock: string = await response.json();
+    return lock;
+}
+
+function useInterval(callback: () => void, delay: number) {
+    const savedCallback = useRef<()=>void>(()=>{});
+  
+    // Remember the latest callback.
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+  
+    // Set up the interval.
+    useEffect(() => {
+            function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            const id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+}
+
 export function useChat({
     api = '/api/chat',
     id,
@@ -42,8 +102,7 @@ export function useChat({
     body,
 }: UseChatOptions = {}): SotopiaChatProps {
     // Generate a unique id for the chat if not provided.
-    const hookId = useId();
-    const chatId = id || hookId;
+    const chatId: string = id || '';
 
     // Store the chat state in SWR, using the chatId as the key to share states.
     const { data: messages, mutate } = useSWR<Message[]>([api, chatId], null, {
@@ -74,6 +133,42 @@ export function useChat({
     // chat state.
     const [error, setError] = useState<undefined | Error>();
 
+    useInterval(
+        () => {
+            const _getSession = async () => {
+                const session = await getSession(chatId);
+                const messages = session.map((message) => {
+                    return message.sender === 'server' ? {
+                            id: nanoid(),
+                            role: 'assistant',
+                            content: message.message,
+                        } : {
+                            id: nanoid(),
+                            role: 'user',
+                            content: message.message,
+                        };
+                    }
+                );
+                mutate(messages, false);
+            };
+            _getSession().catch(console.error);
+        }, 100
+    );
+
+    useInterval(
+        () => {
+            const _getClientLock = async () => {
+                const lock = await getClientLock(chatId);
+                if (lock === 'no action') {
+                    mutateLoading(true, false);
+                } else {
+                    mutateLoading(false, false);
+                }
+            };
+            _getClientLock().catch(console.error);
+        }, 100
+    );
+
     const triggerRequest = useCallback(
         async (chatRequest: ChatRequest) => {
             try {
@@ -87,47 +182,9 @@ export function useChat({
 
                 const previousMessages = messagesRef.current;
                 mutate(chatRequest.messages, false);
-                const response: any = await fetch(
-                    `https://tiger.lti.cs.cmu.edu:8002/${  command}`,
-                    { method: 'GET', cache: 'no-store' },
-                )
-                    .then((res) => {
-                        if (res.status === 200) {
-                            return response.json();
-                        } 
-                            throw new Error(
-                                `Something went wrong on API server!${ 
-                                    response.status 
-                                    }${response.statusText}`,
-                            );
-                        
-                    })
-                    .catch((err) => {
-                        console.log('caught it!', err);
-                        mutate(previousMessages, false);
-                        throw err;
-                    });
 
-                const response_str = JSON.stringify(response);
-
-                const err = await updateChat({
-                    id: chatId,
-                    messages: chatRequest.messages,
-                    response_string: response_str,
-                });
-
-                if (err) {
-                    throw err;
-                }
-
-                abortControllerRef.current = null;
-                const responseMessage: Message = {
-                    id: nanoid(),
-                    role: 'assistant',
-                    content: response_str,
-                };
-
-                mutate([...messagesRef.current, responseMessage], false);
+                await sendMessageToSession(chatId, 'client user', command).catch(console.error);
+                
                 return chatRequest.messages[chatRequest.messages?.length - 1]
                     .content;
             } catch (err) {
