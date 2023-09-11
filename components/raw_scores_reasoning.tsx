@@ -37,12 +37,11 @@ function RawScoresReasoning(scores: rewards, reasoning: string) {
             <div className="mx-auto max-w-lg p-2 pt-8">
                 <details
                     className="rounded-lg p-6 open:bg-white open:shadow-lg open:ring-1 open:ring-black/5 dark:open:bg-slate-900 dark:open:ring-white/10"
-                    open
                 >
                     <summary className="select-none rounded-md bg-lime-200 p-2 text-lg font-semibold leading-6 text-slate-900 dark:text-white">
                         Raw Scores
                     </summary>
-                    <div className="mt-3 flex-wrap text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    <div className="mt-3 flex-wrap break-words text-sm leading-6 text-slate-600 dark:text-slate-400">
                         <p>{scores_string}</p>
                     </div>
                 </details>
@@ -51,7 +50,6 @@ function RawScoresReasoning(scores: rewards, reasoning: string) {
             <div className="mx-auto max-w-lg px-2">
                 <details
                     className="rounded-lg p-6 open:bg-white open:shadow-lg open:ring-1 open:ring-black/5 dark:open:bg-slate-900 dark:open:ring-white/10"
-                    open
                 >
                     <summary className="select-none rounded-md bg-teal-100 p-2 text-lg font-semibold leading-6 text-slate-900 dark:text-white">
                         Reasoning
