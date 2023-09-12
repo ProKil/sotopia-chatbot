@@ -62,15 +62,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         useChat({
             initialMessages,
             id: sessionId,
-            body: {
-                id,
-                previewToken,
-            },
-            onResponse(response) {
-                if (response.status === 401) {
-                    toast.error(response.statusText);
-                }
-            },
         });
     return (
         <>

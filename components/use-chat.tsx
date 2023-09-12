@@ -1,14 +1,26 @@
-import { CreateMessage, type Message,type UseChatHelpers, UseChatOptions  } from 'ai/react';
+import { CreateMessage, type UseChatHelpers  } from 'ai/react';
 import { on } from 'events';
 import { nanoid } from 'nanoid';
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useId, useRef, useState } from 'react';
 import useSWR, { KeyedMutator } from 'swr';
 
 import { updateChat } from '@/app/actions';
 
-import { MessageTransaction,SessionTransaction } from './sotopia-types';
+import { MessageTransaction, SessionTransaction } from './sotopia-types';
 
 const API_URL = 'https://tiger.lti.cs.cmu.edu:8002';
+
+export type Message = {
+    id: string;
+    role: 'user' | 'assistant' | 'system';
+    content: string;
+}
+
+export interface UseChatOptions {
+    api?: string,
+    id?: string;
+    initialMessages?: Message[];
+};
 
 export type RequestOptions = {
     headers?: Record<string, string> | Headers;
@@ -24,18 +36,15 @@ export type ChatRequestOptions = {
     options?: RequestOptions;
 };
 
-export interface SotopiaChatProps
-    extends Pick<
-        UseChatHelpers,
-        | 'append'
-        | 'isLoading'
-        | 'reload'
-        | 'messages'
-        | 'stop'
-        | 'input'
-        | 'setInput'
-    > {
+export interface SotopiaChatProps {
     id?: string;
+    append: (message: Message, options?: ChatRequestOptions) => Promise<void>;
+    reload: () => Promise<string | null>;
+    stop: () => void;
+    input: string;
+    setInput: Dispatch<SetStateAction<string>>;
+    isLoading: boolean;
+    messages: Message[];
 }
 
 async function getSession(sessId: string): Promise<MessageTransaction[]> {
@@ -98,8 +107,6 @@ export function useChat({
     api = '/api/chat',
     id,
     initialMessages = [],
-    onResponse,
-    body,
 }: UseChatOptions = {}): SotopiaChatProps {
     // Generate a unique id for the chat if not provided.
     const chatId: string = id || '';
@@ -184,14 +191,11 @@ export function useChat({
                 mutate(chatRequest.messages, false);
 
                 await sendMessageToSession(chatId, 'client user', command).catch(console.error);
-                
-                return chatRequest.messages[chatRequest.messages?.length - 1]
-                    .content;
             } catch (err) {
                 // Ignore abort errors as they are expected.
                 if ((err as any).name === 'AbortError') {
                     abortControllerRef.current = null;
-                    return null;
+                    return;
                 }
 
                 console.log(err);
@@ -199,6 +203,7 @@ export function useChat({
                 setError(err as Error);
             } finally {
                 mutateLoading(false);
+                return;
             }
         },
         [mutate, chatId, mutateLoading, setError],
@@ -206,7 +211,7 @@ export function useChat({
 
     const append = useCallback(
         async (
-            message: Message | CreateMessage,
+            message: Message,
             { options }: ChatRequestOptions = {},
         ) => {
             if (!message.id) {
@@ -218,7 +223,8 @@ export function useChat({
                 options,
             };
 
-            return triggerRequest(chatRequest);
+            triggerRequest(chatRequest);
+            return;
         },
         [triggerRequest],
     );

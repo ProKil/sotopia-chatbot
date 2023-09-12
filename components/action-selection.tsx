@@ -1,3 +1,4 @@
+import { type Message } from 'ai';
 import { Ban, Hand, Meh, Mic, PhoneOff } from 'lucide-react';
 
 import { Label } from './ui/label';
@@ -9,7 +10,7 @@ export interface ActionSelectionProps {
     actionType: string;
 }
 
-export function ActionSelection({ setActionType, actionType, ...props }: ActionSelectionProps) {
+export function ActionSelection({ setActionType, actionType, ...props }: ActionSelectionProps) {    
     return <RadioGroup value={actionType} onValueChange={setActionType} className="grid grid-cols-6 gap-4">
     <div className='col-span-2'>
         <RadioGroupItem value="action" id="action" className="peer sr-only" />
@@ -37,7 +38,7 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
     </div>
     <div className='col-span-2'>
     <RadioGroupItem
-        value="nvc"
+        value="non-verbal communication"
         id="nvc"
         className="peer sr-only"
         />

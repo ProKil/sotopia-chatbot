@@ -32,7 +32,16 @@ export interface AnnotationForEpisode {
    */
   episode: string;
   annotator_id: string;
-  scores_for_each_turn: number[][];
+  rewards: (
+    | [
+        number,
+        {
+          [k: string]: number;
+        }
+      ]
+    | number
+  )[];
+  reasoning: string;
   [k: string]: unknown;
 }
 export interface Annotator {
