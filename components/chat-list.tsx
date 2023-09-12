@@ -2,13 +2,13 @@ import { type Message } from 'ai';
 import exp from 'constants';
 import { parse } from 'path';
 import { useEffect, useState } from 'react';
+import { render } from 'react-dom';
 
 import { parseMessage } from '@/app/render/[id]/page';
 import { ChatMessage } from '@/components/chat-message';
 import { Separator } from '@/components/ui/separator';
 
 import { parseScenarioData,ScenarioData } from './scenario';
-import { render } from 'react-dom';
 
 export interface ChatList {
     messages: Message[];
