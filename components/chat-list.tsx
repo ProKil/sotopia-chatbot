@@ -8,6 +8,7 @@ import { ChatMessage } from '@/components/chat-message';
 import { Separator } from '@/components/ui/separator';
 
 import { parseScenarioData,ScenarioData } from './scenario';
+import { render } from 'react-dom';
 
 export interface ChatList {
     messages: Message[];
@@ -87,9 +88,17 @@ function ChatParseNormalMessage(message: Message): Message {
     return renderedMessage;
 }
 
+function ChatParseLastMessage(message: Message): Message {
+    const renderedMessage = message;
+    renderedMessage.content = '🚪🏃‍♀️💨 ' + parseMessage(message.content)[0];
+    renderedMessage.content = renderedMessage.content + '\n\n' + '-------------------------------End of the interaction-------------------------------';
+    renderedMessage.role = 'system';
+    return renderedMessage;
+}
+
 function parseMessages(messages: Message[]): Message[] {
     const renderedMessages_list: Message[][] = messages.map((message, index) => {
-        return (index === 0 ? ChatParseInitialMessage(message) : [ChatParseNormalMessage(message),]);
+        return (index === 0 ? ChatParseInitialMessage(message) : index === (messages.length-1) ? [ChatParseLastMessage(message), ] : [ChatParseNormalMessage(message),]);
     });
     const renderedMessages = renderedMessages_list.flat();
     return renderedMessages;
