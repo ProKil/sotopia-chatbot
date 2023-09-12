@@ -27,7 +27,13 @@ function decideClientSideAgent(data: ScenarioData): string {
     // If both agent1 and agent2 have "Unknown" goals or if the data is incomplete, return null
     return '';
   }
-
+const backgroundToMarkdown = (text: string) => {
+    // Split the text into paragraphs
+    text = text.replace('secrets:', '*secrets* 🔒:');
+    text = text.replace('Personality and values description:', '🧠');
+    return text;
+};
+      
 export let clientSideAgent = '';
 export let serverSideAgent = '';
 
@@ -36,59 +42,42 @@ function ChatParseInitialMessage(message: Message): Message[] {
     clientSideAgent = decideClientSideAgent(Scenario);
     serverSideAgent = clientSideAgent === Scenario.agent1 ? Scenario.agent2 : Scenario.agent1;
     return (
-        Scenario.agent1 === clientSideAgent ?
             [{
                 id: message.id,
                 role: 'system',
-                content: 'Scenario: ' + Scenario.scenario,
+                content: 'Scenario 🎬: ' + Scenario.scenario,
             },
             {
                 id: message.id,
                 role: 'system',
-                content: 'You are playing as ' + Scenario.agent1,
+                content: 'You are **playing** as ' + clientSideAgent+ '. '+ backgroundToMarkdown(Scenario.agent1 === clientSideAgent ? Scenario.agent1Background: Scenario.agent2Background),
+            },
+            {
+                id: message.id,
+                role: 'user',
+                content: '👈 Hey! This is ' + clientSideAgent + "👋 (Yes, it's you now)",
             },
             {
                 id: message.id,
                 role: 'system',
-                content: Scenario.agent1Background,
+                content: 'You are **interacting** with ' + Scenario.agent2+ '. ' + backgroundToMarkdown(Scenario.agent1 === clientSideAgent ? Scenario.agent2Background: Scenario.agent1Background),
+            },
+            {
+                id: message.id,
+                role: 'assistant',
+                content: '👈 Hey! This is ' + serverSideAgent + '👋',
+            },
+            {
+            id: message.id,
+            role: 'system',
+            content: 'Your ('+ clientSideAgent +"'s) social goal 🎯: "+ (Scenario.agent1 === clientSideAgent ? Scenario.agent1Goal: Scenario.agent2Goal),
             },
             {
                 id: message.id,
                 role: 'system',
-                content: Scenario.agent1Goal,
+                content: '-------------------Start your interaction now! *Have fun!* 🎉--------------------------',
             },
-            {
-                id: message.id,
-                role: 'system',
-                content: 'You are talking to ' + Scenario.agent2+ '. ' + Scenario.agent2Background,
-            },
-            ]:
-
-    [{
-        id: message.id,
-        role: 'system',
-        content: 'Scenario: ' + Scenario.scenario,
-    },
-        {
-            id: message.id,
-            role: 'system',
-            content: 'You are playing as ' + Scenario.agent1,
-        },
-        {
-            id: message.id,
-            role: 'system',
-            content: Scenario.agent2Background,
-        },
-        {
-            id: message.id,
-            role: 'system',
-            content: Scenario.agent2Goal,
-        },
-        {
-            id: message.id,
-            role: 'system',
-            content: 'You are talking to ' + Scenario.agent1+ '. ' + Scenario.agent1Background,
-        },]
+            ]
     );
 }
 

@@ -7,7 +7,7 @@ import remarkMath from 'remark-math';
 import { ChatMessageActions } from '@/components/chat-message-actions';
 import { MemoizedReactMarkdown } from '@/components/markdown';
 import { CodeBlock } from '@/components/ui/codeblock';
-import { IconOpenAI, IconUser } from '@/components/ui/icons';
+import { IconOpenAI, IconRobot, IconRobotSimple, IconUser } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
 
 import { getAvatar } from './character';
@@ -71,10 +71,10 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                         :
                         message.role === 'assistant'
                         ? 'bg-background'
-                        : 'bg-primary text-primary-foreground',
+                        : 'bg-lime-700 text-primary-foreground',
                 )}
             >
-                {message.role === 'user' ? <>{getAvatar(clientSideAgent)}</> : message.role === 'assistant'? <>{getAvatar(serverSideAgent)}</> : <IconOpenAI />}
+                {message.role === 'user' ? <>{getAvatar(clientSideAgent)}</> : message.role === 'assistant'? <>{getAvatar(serverSideAgent)}</> : <IconRobotSimple />}
             </div>
             <div className={msgStyles.join(' ')}>
                 <MemoizedReactMarkdown
