@@ -73,6 +73,22 @@ function showAdditionalInfo(message: Message) {
     } return '';
 }
 
+export function parseMessage(message: string): [string, string] {
+    const content = message.replace(/.*said:/, 'said:');
+  
+    console.log(content);
+    if (content.startsWith('said: "')) {
+      return [content.substring(7, content.length - 1), 'speak'];
+    } if (content.startsWith('[non-verbal communication]')) {
+      return [content.substring(26), 'non-verbal communication'];
+    } if (content.startsWith('[action]')) {
+      return [content.substring(8), 'action'];
+    } if (content === 'left the conversation') {
+      return [content, 'leave'];
+    }
+    return [content, 'unknown'];
+  }
+
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
     const msgStyles = [
         'ml-4 flex-1 space-y-2 overflow-hidden px-1',

@@ -12,7 +12,7 @@ import { auth } from '@/auth';
 import CharacterCard, { Character, } from '@/components/character';
 import { ChatProps } from '@/components/chat';
 import { ChatList } from '@/components/chat-list-history';
-import { Message } from '@/components/chat-message-history';
+import { Message, parseMessage } from '@/components/chat-message-history';
 import { EmptyScreen } from '@/components/empty-screen';
 import RawScoresReasoning from '@/components/raw_scores_reasoning';
 import {
@@ -56,20 +56,7 @@ function filterDidnothingMessages(messages: any[][]) {
         .flat();
 }
 
-function parseMessage(message: string): [string, string] {
-    const content = message;
 
-    if (content.startsWith('said: "')) {
-        return [content.substring(7, content.length - 1), 'speak'];
-    } if (content.startsWith('[non-verbal communication]')) {
-        return [content.substring(26), 'non-verbal communication'];
-    } if (content.startsWith('[action]')) {
-        return [content.substring(8), 'action'];
-    } if (content === 'left the conversation') {
-        return [content, 'leave'];
-    }
-    return [content, 'unknown'];
-}
 
 function parseMessages(messages: any[][]) {
     return messages.map((message: any) => {
@@ -221,6 +208,8 @@ function getEmptyScenarioData(): ScenarioData {
         agent2: '',
         agent1Goal: '',
         agent2Goal: '',
+        agent1Background: '',
+        agent2Background: '',
     };
 }
 
