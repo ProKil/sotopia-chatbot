@@ -1,13 +1,14 @@
+'use client';
 import { type Message } from 'ai';
 import exp from 'constants';
 import { parse } from 'path';
 import { useEffect, useState } from 'react';
 import { render } from 'react-dom';
 
-import { parseMessage } from '@/app/render/[id]/page';
 import { ChatMessage } from '@/components/chat-message';
 import { Separator } from '@/components/ui/separator';
 
+import { parseMessage } from './chat-message-history';
 import { parseScenarioData,ScenarioData } from './scenario';
 
 export interface ChatList {
