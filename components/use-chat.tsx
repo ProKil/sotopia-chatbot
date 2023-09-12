@@ -214,6 +214,7 @@ export function useChat({
             message: Message,
             { options }: ChatRequestOptions = {},
         ) => {
+            console.log(message);
             if (!message.id) {
                 message.id = nanoid();
             }

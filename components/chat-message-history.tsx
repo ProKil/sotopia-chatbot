@@ -76,7 +76,6 @@ function showAdditionalInfo(message: Message) {
 export function parseMessage(message: string): [string, string] {
     const content = message.replace(/.*said:/, 'said:');
   
-    console.log(content);
     if (content.startsWith('said: "')) {
       return [content.substring(7, content.length - 1), 'speak'];
     } if (content.startsWith('[non-verbal communication]')) {
