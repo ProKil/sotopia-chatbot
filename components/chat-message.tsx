@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 
 import { getAvatar } from './character';
 import { clientSideAgent, serverSideAgent } from './chat-list';
+import { getMessageClass } from './chat-message-history';
 
 export interface ChatMessageProps {
     message: Message;
@@ -40,23 +41,10 @@ export function getInitials(fullName: string) {
     return null; // You can also return an empty string or another value as needed.
 }
 
-export function getMessageClass(messageType: string | undefined) {
-    switch (messageType) {
-        case 'action':
-            return 'bg-blue-200';
-        case 'non-verbal communication':
-            return 'bg-green-200';
-        case 'leave':
-            return 'rounded-md shadow-sm bg-yellow-200';
-        default:
-            return '';
-    }
-}
-
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
     const msgStyles = [
         'ml-4 flex-1 space-y-2 overflow-hidden px-1',
-        getMessageClass(message.id),
+        getMessageClass(message.content),
     ];
     return (
         <div

@@ -57,7 +57,6 @@ function filterDidnothingMessages(messages: any[][]) {
 }
 
 
-
 function parseMessages(messages: any[][]) {
     return messages.map((message: any) => {
         const [sender, receiver, content] = message;

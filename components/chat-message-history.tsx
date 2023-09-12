@@ -52,11 +52,11 @@ export function getInitials(fullName: string) {
 
 export function getMessageClass(messageType: string | undefined) {
     switch (messageType) {
-        case 'action':
-            return 'bg-blue-200';
-        case 'non-verbal communication':
-            return 'bg-green-200';
-        case 'leave':
+        case messageType?.startsWith('[action]'):
+            return 'rounded-md shadow-sm bg-blue-200';
+        case messageType?.startsWith('[non-verbal communication]'):
+            return 'rounded-md shadow-sm bg-green-200';
+        case messageType?.startsWith('[leave]'):
             return 'rounded-md shadow-sm bg-yellow-200';
         default:
             return '';
@@ -73,20 +73,27 @@ function showAdditionalInfo(message: Message) {
     } return '';
 }
 
-export function parseMessage(message: string): [string, string] {
-    const content = message.replace(/.*said:/, 'said:');
-  
-    if (content.startsWith('said: "')) {
-      return [content.substring(7, content.length - 1), 'speak'];
-    } if (content.startsWith('[non-verbal communication]')) {
-      return [content.substring(26), 'non-verbal communication'];
-    } if (content.startsWith('[action]')) {
-      return [content.substring(8), 'action'];
-    } if (content === 'left the conversation') {
-      return [content, 'leave'];
+export function parseMessage(message: string): string {
+    try {
+        const parsed = JSON.parse(message);
+        if (parsed.action_type !== 'speak') {
+            return parsed.argument;
+        }
+        else {
+            return '['+parsed.action_type+'] '+parsed.argument;; 
+        }
     }
-    return [content, 'unknown'];
-  }
+    catch (e) {
+        const content = message.replace(/.*said:/, 'said:').trim();
+  
+        if (content.startsWith('said: "')) {
+            return content.substring(7, content.length - 1);
+        }
+        else {
+            return content;
+        }
+    }
+}
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
     const msgStyles = [
