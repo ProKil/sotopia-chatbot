@@ -133,6 +133,13 @@ export function getAvatar(agentName: string, width = 100, height = 100) {
   // Your logic to generate the SVG based on agentName
   // Example return statement with Next.js Image component:
   return (
+    agentName === '' ?
+      <Image
+        src={avatars['Samuel Anderson']}
+        alt="Agent Avatar"
+        width={width} // Set the desired width (default: 100)
+        height={height} // Set the desired height (default: 100)
+      /> :
     <Image
       src={avatars[agentName]}
       alt="Agent Avatar"

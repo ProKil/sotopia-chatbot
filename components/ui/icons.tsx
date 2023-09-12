@@ -114,6 +114,25 @@ function IconOpenAI({ className, ...props }: React.ComponentProps<'svg'>) {
     );
 }
 
+function IconRobot({ className, ...props }: React.ComponentProps<'svg'>) {
+    return (
+        <svg viewBox="0 0 36 36" aria-hidden="true" role="img" className={cn('h-6 w-6', className)} preserveAspectRatio="xMidYMid meet"><ellipse fill="#F4900C" cx="33.5" cy="14.5" rx="2.5" ry="3.5"></ellipse><ellipse fill="#F4900C" cx="2.5" cy="14.5" rx="2.5" ry="3.5"></ellipse><path fill="#FFAC33" d="M34 19a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v9zM7 19a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v9z"></path><path fill="#FFCC4D" d="M28 5c0 2.761-4.478 4-10 4C12.477 9 8 7.761 8 5s4.477-5 10-5c5.522 0 10 2.239 10 5z"></path><path fill="#F4900C" d="M25 4.083C25 5.694 21.865 7 18 7c-3.866 0-7-1.306-7-2.917c0-1.611 3.134-2.917 7-2.917c3.865 0 7 1.306 7 2.917z"></path><path fill="#269" d="M30 5.5C30 6.881 28.881 7 27.5 7h-19C7.119 7 6 6.881 6 5.5S7.119 3 8.5 3h19A2.5 2.5 0 0 1 30 5.5z"></path><path fill="#55ACEE" d="M30 6H6a2 2 0 0 0-2 2v26h28V8a2 2 0 0 0-2-2z"></path><path fill="#3B88C3" d="M35 33v-1a2 2 0 0 0-2-2H22.071l-3.364 3.364a.999.999 0 0 1-1.414 0L13.929 30H3a2 2 0 0 0-2 2v1c0 1.104-.104 2 1 2h32c1.104 0 1-.896 1-2z"></path><circle fill="#FFF" cx="24.5" cy="14.5" r="4.5"></circle><circle fill="#DD2E44" cx="24.5" cy="14.5" r="2.721"></circle><circle fill="#FFF" cx="11.5" cy="14.5" r="4.5"></circle><path fill="#F5F8FA" d="M29 25.5a2.5 2.5 0 0 1-2.5 2.5h-17a2.5 2.5 0 1 1 0-5h17a2.5 2.5 0 0 1 2.5 2.5z"></path><path fill="#CCD6DD" d="M17 23h2v5h-2zm-5 0h2v5h-2zm10 0h2v5h-2zM7 25.5a2.5 2.5 0 0 0 2 2.45v-4.9a2.5 2.5 0 0 0-2 2.45zm20-2.45v4.899a2.5 2.5 0 0 0 0-4.899z"></path><circle fill="#DD2E44" cx="11.5" cy="14.5" r="2.721"></circle></svg>
+    );
+}
+
+function IconRobotSimple({ className, ...props }: React.ComponentProps<'svg'>) {
+    return (
+        <svg className={cn('h-6 w-6', className)} viewBox="0 0 24 24" fill="none">
+
+        <g id="SVGRepo_bgCarrier" stroke-width="0"/>
+
+        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M14 2C14 2.74028 13.5978 3.38663 13 3.73244V4H20C21.6569 4 23 5.34315 23 7V19C23 20.6569 21.6569 22 20 22H4C2.34315 22 1 20.6569 1 19V7C1 5.34315 2.34315 4 4 4H11V3.73244C10.4022 3.38663 10 2.74028 10 2C10 0.895431 10.8954 0 12 0C13.1046 0 14 0.895431 14 2ZM4 6H11H13H20C20.5523 6 21 6.44772 21 7V19C21 19.5523 20.5523 20 20 20H4C3.44772 20 3 19.5523 3 19V7C3 6.44772 3.44772 6 4 6ZM15 11.5C15 10.6716 15.6716 10 16.5 10C17.3284 10 18 10.6716 18 11.5C18 12.3284 17.3284 13 16.5 13C15.6716 13 15 12.3284 15 11.5ZM16.5 8C14.567 8 13 9.567 13 11.5C13 13.433 14.567 15 16.5 15C18.433 15 20 13.433 20 11.5C20 9.567 18.433 8 16.5 8ZM7.5 10C6.67157 10 6 10.6716 6 11.5C6 12.3284 6.67157 13 7.5 13C8.32843 13 9 12.3284 9 11.5C9 10.6716 8.32843 10 7.5 10ZM4 11.5C4 9.567 5.567 8 7.5 8C9.433 8 11 9.567 11 11.5C11 13.433 9.433 15 7.5 15C5.567 15 4 13.433 4 11.5ZM10.8944 16.5528C10.6474 16.0588 10.0468 15.8586 9.55279 16.1056C9.05881 16.3526 8.85858 16.9532 9.10557 17.4472C9.68052 18.5971 10.9822 19 12 19C13.0178 19 14.3195 18.5971 14.8944 17.4472C15.1414 16.9532 14.9412 16.3526 14.4472 16.1056C13.9532 15.8586 13.3526 16.0588 13.1056 16.5528C13.0139 16.7362 12.6488 17 12 17C11.3512 17 10.9861 16.7362 10.8944 16.5528Z" fill="#f5f6f7"/> </g>
+
+        </svg>);
+}
+
 function IconVercel({ className, ...props }: React.ComponentProps<'svg'>) {
     return (
         <svg
@@ -504,6 +523,8 @@ export {
     IconOpenAI,
     IconPlus,
     IconRefresh,
+    IconRobot,
+    IconRobotSimple,
     IconSeparator,
     IconShare,
     IconSidebar,
