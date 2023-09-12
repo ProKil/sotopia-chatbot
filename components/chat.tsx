@@ -77,7 +77,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             </div>
             <div className={hiddenOrNot}>
             <ChatPanel
-                id={id}
+                id={sessionId}
                 isLoading={isLoading}
                 stop={stop}
                 append={append}
