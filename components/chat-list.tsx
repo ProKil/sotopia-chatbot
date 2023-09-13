@@ -44,7 +44,12 @@ function ChatParseInitialMessage(message: Message): Message[] {
     clientSideAgent = decideClientSideAgent(Scenario);
     serverSideAgent = clientSideAgent === Scenario.agent1 ? Scenario.agent2 : Scenario.agent1;
     return (
-            [{
+        [{
+            id: message.id,
+            role: 'system',
+            content: "Hi, welcome to Sotopia! 👋 I am the 'stage director'. I will give you some instructions and hints during the interaction. 📝",
+        },
+            {
                 id: message.id,
                 role: 'system',
                 content: 'Scenario 🎬: ' + Scenario.scenario,
@@ -72,7 +77,7 @@ function ChatParseInitialMessage(message: Message): Message[] {
             {
             id: message.id,
             role: 'system',
-            content: 'Your ('+ clientSideAgent +"'s) social goal 🎯: "+ (Scenario.agent1 === clientSideAgent ? Scenario.agent1Goal: Scenario.agent2Goal),
+            content: 'Your ('+ clientSideAgent +"'s) social goal 🎯: "+ (Scenario.agent1 === clientSideAgent ? Scenario.agent1Goal: Scenario.agent2Goal) + "  \n*Note that the other agent can't see your goal.*",
             },
             {
                 id: message.id,
@@ -85,13 +90,13 @@ function ChatParseInitialMessage(message: Message): Message[] {
 
 function ChatParseNormalMessage(message: Message): Message {
     const renderedMessage = message;
-    renderedMessage.content = parseMessage(message.content)[0];
+    renderedMessage.content = parseMessage(message.content);
     return renderedMessage;
 }
 
 function ChatParseLastMessage(message: Message): Message {
     const renderedMessage = message;
-    renderedMessage.content = '🚪🏃‍♀️💨 ' + parseMessage(message.content)[0];
+    renderedMessage.content = '🚪🏃‍♀️💨 ' + parseMessage(message.content);
     renderedMessage.content = renderedMessage.content + '\n\n' + '-------------------------------End of the interaction-------------------------------';
     renderedMessage.role = 'system';
     return renderedMessage;
@@ -99,7 +104,7 @@ function ChatParseLastMessage(message: Message): Message {
 
 function parseMessages(messages: Message[]): Message[] {
     const renderedMessages_list: Message[][] = messages.map((message, index) => {
-        return (index === 0 ? ChatParseInitialMessage(message) : index === (messages.length-1) ? [ChatParseLastMessage(message), ] : [ChatParseNormalMessage(message),]);
+        return (index === 0 ? ChatParseInitialMessage(message) : 'Someone has left or the conversation is too long.' === message.content ? [ChatParseLastMessage(message), ] : [ChatParseNormalMessage(message),]);
     });
     const renderedMessages = renderedMessages_list.flat();
     return renderedMessages;
@@ -116,16 +121,16 @@ export function ChatList({ messages }: ChatList) {
     }, [messages]);
     
     return (
-        <div className="relative mx-auto max-w-2xl px-4">
+        <><div className="relative mx-auto max-w-2xl px-4">
             {renderedMessages.map((message, index) => (
                 <div key={index}>
                     <ChatMessage message={message} />
                     {/* {index < messages.length - 1 && (
-            <Separator className="my-4 md:my-8" />
-          )} */}
+    <Separator className="my-4 md:my-8" />
+  )} */}
                 </div>
             ))}
-        </div>
+        </div><div className='h-[80px] w-full'> </div></>
     );
 }
 

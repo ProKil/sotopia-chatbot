@@ -3,7 +3,7 @@
 import { type Message } from 'ai/react';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { ChatList } from '@/components/chat-list';
@@ -44,7 +44,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const [sessionIdDialog, setSessionIdDialog] = useState(false);
     const [sessionIdInput, setSessionIdInput] = useState<string>('');
     const [sessionId, setSessionId] = useState<string>(id || '');
-    const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');   
+    const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');  
+    const [trackVisibility, setTrackVisibility] = useState<boolean>(false);
 
     useEffect(() => {
         if (sessionId !== '') {
@@ -62,23 +63,38 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         useChat({
             initialMessages,
             id: sessionId,
-            body: {
-                id,
-                previewToken,
-            },
-            onResponse(response) {
-                if (response.status === 401) {
-                    toast.error(response.statusText);
-                }
-            },
         });
+
+    
+
+    
+    useEffect(function mount() {
+        const turnOffTrackVisibility = () => {
+            if(window.innerHeight + window.scrollY <=
+                document.body.offsetHeight - 10){
+                setTrackVisibility(false);
+            }
+        };
+        window.addEventListener('scroll', turnOffTrackVisibility, { passive: true });
+    
+        return function unMount() {
+          window.removeEventListener('scroll', turnOffTrackVisibility);
+        };
+      });
+
+    useEffect(() => {
+        if(isLoading) {
+            setTrackVisibility(true);
+        }
+    }, [isLoading]);
+
     return (
         <>
             <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
                 {hiddenOrNot=== 'block' ? (
           <>
             <ChatList messages={messages} />
-            <ChatScrollAnchor trackVisibility={isLoading} />
+            <ChatScrollAnchor trackVisibility={trackVisibility}/>
           </>
         ) : (
           <EmptyScreen setSessionIdDialog={setSessionIdDialog} />
@@ -86,7 +102,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             </div>
             <div className={hiddenOrNot}>
             <ChatPanel
-                id={id}
+                id={sessionId}
                 isLoading={isLoading}
                 stop={stop}
                 append={append}

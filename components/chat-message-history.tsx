@@ -1,5 +1,6 @@
 // Inspired by Chatbot-UI and modified to fit the needs of this project
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
+import { error } from 'console';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 
@@ -16,7 +17,6 @@ export declare type Message = {
     createdAt?: Date;
     content: string;
     role: 'system' | 'user' | 'assistant' | 'character';
-    type?: 'speak' | 'action' | 'non-verbal communication' | 'leave';
     additional_info?: string; // a footnote for the message
 };
 export declare type CreateMessage = {
@@ -51,17 +51,16 @@ export function getInitials(fullName: string) {
 }
 
 export function getMessageClass(messageType: string | undefined) {
-    switch (messageType) {
-        case 'action':
-            return 'bg-blue-200';
-        case 'non-verbal communication':
-            return 'bg-green-200';
-        case 'leave':
-            return 'rounded-md shadow-sm bg-yellow-200';
-        default:
-            return '';
+    if (messageType?.startsWith('[action]')) {
+      return 'rounded-md shadow-sm bg-blue-200';
+    } else if (messageType?.startsWith('[non-verbal communication]')) {
+      return 'rounded-md shadow-sm bg-green-200';
+    } else if (messageType?.startsWith('left the conversation')) {
+      return 'rounded-md shadow-sm bg-yellow-200';
+    } else {
+      return '';
     }
-}
+  }
 
 function showAdditionalInfo(message: Message) {
     if (message.additional_info) {
@@ -73,26 +72,32 @@ function showAdditionalInfo(message: Message) {
     } return '';
 }
 
-export function parseMessage(message: string): [string, string] {
-    const content = message.replace(/.*said:/, 'said:');
-  
-    console.log(content);
-    if (content.startsWith('said: "')) {
-      return [content.substring(7, content.length - 1), 'speak'];
-    } if (content.startsWith('[non-verbal communication]')) {
-      return [content.substring(26), 'non-verbal communication'];
-    } if (content.startsWith('[action]')) {
-      return [content.substring(8), 'action'];
-    } if (content === 'left the conversation') {
-      return [content, 'leave'];
+export function parseMessage(message: string): string {
+    try {
+        const parsed = JSON.parse(message);
+        if (parsed.action_type === 'speak') {
+            return parsed.argument;
+        }
+        else {
+            return '['+parsed.action_type+'] '+parsed.argument;; 
+        }
     }
-    return [content, 'unknown'];
-  }
+    catch (e) {
+        const content = message.replace(/.*said:/, 'said:').trim();
+  
+        if (content.startsWith('said: "')) {
+            return content.substring(7, content.length - 1);
+        }
+        else {
+            return content;
+        }
+    }
+}
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
     const msgStyles = [
         'ml-4 flex-1 space-y-2 overflow-hidden px-1',
-        getMessageClass(message.type),
+        getMessageClass(message.content),
     ];
     return (
         <div

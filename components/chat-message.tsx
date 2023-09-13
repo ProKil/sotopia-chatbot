@@ -1,6 +1,7 @@
 // Inspired by Chatbot-UI and modified to fit the needs of this project
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
 import { Message } from 'ai';
+import { useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 
@@ -12,6 +13,7 @@ import { cn } from '@/lib/utils';
 
 import { getAvatar } from './character';
 import { clientSideAgent, serverSideAgent } from './chat-list';
+import { getMessageClass } from './chat-message-history';
 
 export interface ChatMessageProps {
     message: Message;
@@ -40,24 +42,18 @@ export function getInitials(fullName: string) {
     return null; // You can also return an empty string or another value as needed.
 }
 
-export function getMessageClass(messageType: string | undefined) {
-    switch (messageType) {
-        case 'action':
-            return 'bg-blue-200';
-        case 'non-verbal communication':
-            return 'bg-green-200';
-        case 'leave':
-            return 'rounded-md shadow-sm bg-yellow-200';
-        default:
-            return '';
-    }
-}
-
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
-    const msgStyles = [
-        'ml-4 flex-1 space-y-2 overflow-hidden px-1',
-        getMessageClass(message.id),
-    ];
+    const [msgStyles, setMsgStyles] = useState<string[]>(['ml-4 flex-1 space-y-2 overflow-hidden px-1',]);
+    // const msgStyles = [
+    //     'ml-4 flex-1 space-y-2 overflow-hidden px-1',
+    //     getMessageClass(message.content),
+    // ];
+    useEffect(() => {
+        setMsgStyles([
+            'ml-4 flex-1 space-y-2 overflow-hidden px-1',
+            getMessageClass(message.content),
+        ]);
+    }, [message]);
     return (
         <div
             className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -76,7 +72,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             >
                 {message.role === 'user' ? <>{getAvatar(clientSideAgent)}</> : message.role === 'assistant'? <>{getAvatar(serverSideAgent)}</> : <IconRobotSimple />}
             </div>
-            <div className={msgStyles.join(' ')}>
+            <div className={cn(msgStyles.join(' '))}>
                 <MemoizedReactMarkdown
                     className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
                     remarkPlugins={[remarkGfm, remarkMath]}
