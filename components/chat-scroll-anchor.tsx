@@ -7,9 +7,10 @@ import { useAtBottom } from '@/lib/hooks/use-at-bottom';
 
 interface ChatScrollAnchorProps {
     trackVisibility?: boolean;
+    setMessagesChangeTriggerScroll?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export function ChatScrollAnchor({ trackVisibility }: ChatScrollAnchorProps) {
+export function ChatScrollAnchor({ trackVisibility, setMessagesChangeTriggerScroll }: ChatScrollAnchorProps) {
     const isAtBottom = useAtBottom();
     const { ref, entry, inView } = useInView({
         trackVisibility,
@@ -22,8 +23,11 @@ export function ChatScrollAnchor({ trackVisibility }: ChatScrollAnchorProps) {
             entry?.target.scrollIntoView({
                 block: 'start',
             });
+            if (setMessagesChangeTriggerScroll) {
+                setMessagesChangeTriggerScroll(false);
+            }
         }
-    }, [inView, entry, isAtBottom, trackVisibility]);
+    }, [inView, entry, isAtBottom, trackVisibility, setMessagesChangeTriggerScroll]);
 
     return <div ref={ref} className="h-px w-full" />;
 }

@@ -44,7 +44,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const [sessionIdDialog, setSessionIdDialog] = useState(false);
     const [sessionIdInput, setSessionIdInput] = useState<string>('');
     const [sessionId, setSessionId] = useState<string>(id || '');
-    const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');   
+    const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');  
+    const [messagesChangeTriggerScroll, setMessagesChangeTriggerScroll] = useState<boolean>(false);
 
     useEffect(() => {
         if (sessionId !== '') {
@@ -63,13 +64,17 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             initialMessages,
             id: sessionId,
         });
+
+    useEffect(() => {
+        setMessagesChangeTriggerScroll(true);
+    }, [messages]);
     return (
         <>
             <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
                 {hiddenOrNot=== 'block' ? (
           <>
             <ChatList messages={messages} />
-            <ChatScrollAnchor trackVisibility={isLoading} />
+            <ChatScrollAnchor trackVisibility={isLoading || messagesChangeTriggerScroll} />
           </>
         ) : (
           <EmptyScreen setSessionIdDialog={setSessionIdDialog} />
