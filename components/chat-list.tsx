@@ -77,7 +77,7 @@ function ChatParseInitialMessage(message: Message): Message[] {
             {
             id: message.id,
             role: 'system',
-            content: 'Your ('+ clientSideAgent +"'s) social goal 🎯: "+ (Scenario.agent1 === clientSideAgent ? Scenario.agent1Goal: Scenario.agent2Goal),
+            content: 'Your ('+ clientSideAgent +"'s) social goal 🎯: "+ (Scenario.agent1 === clientSideAgent ? Scenario.agent1Goal: Scenario.agent2Goal) + "  \n*Note that the other agent can't see your goal.*",
             },
             {
                 id: message.id,
