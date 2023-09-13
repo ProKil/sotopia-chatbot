@@ -3,7 +3,7 @@
 import { type Message } from 'ai/react';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { ChatList } from '@/components/chat-list';
@@ -45,7 +45,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const [sessionIdInput, setSessionIdInput] = useState<string>('');
     const [sessionId, setSessionId] = useState<string>(id || '');
     const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');  
-    const [messagesChangeTriggerScroll, setMessagesChangeTriggerScroll] = useState<boolean>(false);
+    const [trackVisibility, setTrackVisibility] = useState<boolean>(false);
 
     useEffect(() => {
         if (sessionId !== '') {
@@ -65,16 +65,28 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             id: sessionId,
         });
 
+    const turnOffTrackVisibility = () => {
+        if(window.innerHeight + window.scrollY <=
+            document.body.offsetHeight - 10){
+            setTrackVisibility(false);
+        }
+    };
+
+    window.addEventListener('scroll', turnOffTrackVisibility, { passive: true });
+
     useEffect(() => {
-        setMessagesChangeTriggerScroll(true);
-    }, [messages]);
+        if(isLoading) {
+            setTrackVisibility(true);
+        }
+    }, [isLoading]);
+
     return (
         <>
             <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
                 {hiddenOrNot=== 'block' ? (
           <>
             <ChatList messages={messages} />
-            <ChatScrollAnchor trackVisibility={isLoading || messagesChangeTriggerScroll} />
+            <ChatScrollAnchor trackVisibility={trackVisibility}/>
           </>
         ) : (
           <EmptyScreen setSessionIdDialog={setSessionIdDialog} />
