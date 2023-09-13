@@ -1,5 +1,6 @@
 'use client';
 
+import { type Message } from 'ai';
 import * as React from 'react';
 import { useInView } from 'react-intersection-observer';
 
@@ -18,7 +19,7 @@ export function ChatScrollAnchor({ trackVisibility }: ChatScrollAnchorProps) {
     });
 
     React.useEffect(() => {
-        if (!isAtBottom && trackVisibility && !inView) {
+        if (trackVisibility && !inView) {
             entry?.target.scrollIntoView({
                 block: 'start',
             });

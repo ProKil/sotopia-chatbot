@@ -146,11 +146,11 @@ export function useChat({
                 const session = await getSession(chatId);
                 const messages = session.map((message) => {
                     return message.sender === 'server' ? {
-                            id: nanoid(),
+                            id: chatId,
                             role: 'assistant',
                             content: message.message,
                         } : {
-                            id: nanoid(),
+                            id: chatId,
                             role: 'user',
                             content: message.message,
                         };
