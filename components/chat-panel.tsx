@@ -36,7 +36,7 @@ export function ChatPanel({
     setInput,
     messages,
 }: ChatPanelProps) {
-    const [actionType, setActionType] = useState('action');
+    const [actionType, setActionType] = useState('speak');
     const [noneOrLeaveDiaglog, setNoneOrLeaveDialog] = useState(false);
     const [noneOrLeave, setNoneOrLeave] = useState<'none' | 'leave'>('none');
     const appendNoneOrLeaveDirectly =  (actionTypeToSet: string) => {
