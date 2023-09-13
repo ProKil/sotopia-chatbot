@@ -19,7 +19,7 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         className="h-15 col-span-2 flex  flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
         <Hand className="mb-3 h-4 w-4" />
-        Action
+        Do something
         </Label>
     </div>
     <div className='col-span-2'>
@@ -33,7 +33,7 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         className="h-15 col-span-2 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
         <Mic className="mb-3 h-4 w-4" />
-        Speak
+        Say something
         </Label>
     </div>
     <div className='col-span-2'>
@@ -47,7 +47,7 @@ export function ActionSelection({ setActionType, actionType, ...props }: ActionS
         className="h-15 col-span-2 flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-2 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
         >
         <Meh className="mb-3 h-4 w-4" />
-        Face expression
+        Express Non-Verbally
         </Label>
     </div>
     <div className='col-span-3'>

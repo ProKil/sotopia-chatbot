@@ -60,17 +60,19 @@ export const parseScenarioData = (text: string): ScenarioData => {
     }
 
     // Extracting "agent1Goal" and "agent2Goal"
-    const regexString = `${scenarioData.agent1}'s goal:\\s*([\\s\\S]*?)(?=${scenarioData.agent2}'s goal:|\\$)`;
-    const goalsMatch = text.match(new RegExp(regexString, 'i'));
+    console.log(text);
+    console.log(scenarioData.agent2);
+    const regexString = `(?<=${scenarioData.agent1}'s goal:)(.*?)(?=${scenarioData.agent2}'s goal:)`;
+    const goalsMatch = text.match(new RegExp(regexString, 's'));
     if (goalsMatch) {
         const goals = goalsMatch[1].trim().split('\n');
-        scenarioData.agent1Goal = goals[0].trim();
+        scenarioData.agent1Goal = goals.join(' \n').trim();
     }
-    const regexString_2 = `${scenarioData.agent2}'s goal:\\s*([\\s\\S]*?)(?=Conversation Starts:|\\$)`;
-    const goalsMatch_2 = text.match(new RegExp(regexString_2, 'i'));
+    const regexString_2 = `(?<=${scenarioData.agent2}'s goal:)(.*?)(?=Conversation Starts:)`;
+    const goalsMatch_2 = text.match(new RegExp(regexString_2, 's'));
     if (goalsMatch_2) {
         const goals_2 = goalsMatch_2[1].trim().split('\n');
-        scenarioData.agent2Goal = goals_2[0].trim();
+        scenarioData.agent2Goal = goals_2.join(' \n').trim();
     }
 
     // Handle the case where there are two goals

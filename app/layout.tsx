@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
     title: {
-        default: 'Next.js AI Chatbot',
+        default: 'Sotopia-Chat',
         template: '%s - Next.js AI Chatbot',
     },
     description:
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
         { media: '(prefers-color-scheme: dark)', color: 'black' },
     ],
     icons: {
-        icon: '/favicon.ico',
-        shortcut: '/favicon-16x16.png',
+        icon: '/icons8-s-stickers-32.png',
+        shortcut: '/icons8-s-stickers-16.png',
         apple: '/apple-touch-icon.png',
     },
 };

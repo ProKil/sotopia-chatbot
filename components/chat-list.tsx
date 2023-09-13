@@ -44,7 +44,12 @@ function ChatParseInitialMessage(message: Message): Message[] {
     clientSideAgent = decideClientSideAgent(Scenario);
     serverSideAgent = clientSideAgent === Scenario.agent1 ? Scenario.agent2 : Scenario.agent1;
     return (
-            [{
+        [{
+            id: message.id,
+            role: 'system',
+            content: "Hi, welcome to Sotopia! 👋 I am the 'stage director'. I will give you some instructions and hints during the interaction. 📝",
+        },
+            {
                 id: message.id,
                 role: 'system',
                 content: 'Scenario 🎬: ' + Scenario.scenario,
@@ -99,7 +104,7 @@ function ChatParseLastMessage(message: Message): Message {
 
 function parseMessages(messages: Message[]): Message[] {
     const renderedMessages_list: Message[][] = messages.map((message, index) => {
-        return (index === 0 ? ChatParseInitialMessage(message) : 'The other agent has left or the conversation is too long.' === message.content ? [ChatParseLastMessage(message), ] : [ChatParseNormalMessage(message),]);
+        return (index === 0 ? ChatParseInitialMessage(message) : 'Someone has left or the conversation is too long.' === message.content ? [ChatParseLastMessage(message), ] : [ChatParseNormalMessage(message),]);
     });
     const renderedMessages = renderedMessages_list.flat();
     return renderedMessages;
