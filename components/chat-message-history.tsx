@@ -1,5 +1,6 @@
 // Inspired by Chatbot-UI and modified to fit the needs of this project
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
+import { error } from 'console';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 
@@ -16,7 +17,6 @@ export declare type Message = {
     createdAt?: Date;
     content: string;
     role: 'system' | 'user' | 'assistant' | 'character';
-    type?: 'speak' | 'action' | 'non-verbal communication' | 'leave';
     additional_info?: string; // a footnote for the message
 };
 export declare type CreateMessage = {
@@ -51,17 +51,16 @@ export function getInitials(fullName: string) {
 }
 
 export function getMessageClass(messageType: string | undefined) {
-    switch (messageType) {
-        case messageType?.startsWith('[action]'):
-            return 'rounded-md shadow-sm bg-blue-200';
-        case messageType?.startsWith('[non-verbal communication]'):
-            return 'rounded-md shadow-sm bg-green-200';
-        case messageType?.startsWith('[leave]'):
-            return 'rounded-md shadow-sm bg-yellow-200';
-        default:
-            return '';
+    if (messageType?.startsWith('[action]')) {
+      return 'rounded-md shadow-sm bg-blue-200';
+    } else if (messageType?.startsWith('[non-verbal communication]')) {
+      return 'rounded-md shadow-sm bg-green-200';
+    } else if (messageType?.startsWith('left the conversation')) {
+      return 'rounded-md shadow-sm bg-yellow-200';
+    } else {
+      return '';
     }
-}
+  }
 
 function showAdditionalInfo(message: Message) {
     if (message.additional_info) {
@@ -76,7 +75,7 @@ function showAdditionalInfo(message: Message) {
 export function parseMessage(message: string): string {
     try {
         const parsed = JSON.parse(message);
-        if (parsed.action_type !== 'speak') {
+        if (parsed.action_type === 'speak') {
             return parsed.argument;
         }
         else {
@@ -98,7 +97,7 @@ export function parseMessage(message: string): string {
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
     const msgStyles = [
         'ml-4 flex-1 space-y-2 overflow-hidden px-1',
-        getMessageClass(message.type),
+        getMessageClass(message.content),
     ];
     return (
         <div

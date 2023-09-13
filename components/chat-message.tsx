@@ -1,6 +1,7 @@
 // Inspired by Chatbot-UI and modified to fit the needs of this project
 // @see https://github.com/mckaywrigley/chatbot-ui/blob/main/components/Chat/ChatMessage.tsx
 import { Message } from 'ai';
+import { useEffect, useState } from 'react';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 
@@ -42,10 +43,17 @@ export function getInitials(fullName: string) {
 }
 
 export function ChatMessage({ message, ...props }: ChatMessageProps) {
-    const msgStyles = [
-        'ml-4 flex-1 space-y-2 overflow-hidden px-1',
-        getMessageClass(message.content),
-    ];
+    const [msgStyles, setMsgStyles] = useState<string[]>(['ml-4 flex-1 space-y-2 overflow-hidden px-1',]);
+    // const msgStyles = [
+    //     'ml-4 flex-1 space-y-2 overflow-hidden px-1',
+    //     getMessageClass(message.content),
+    // ];
+    useEffect(() => {
+        setMsgStyles([
+            'ml-4 flex-1 space-y-2 overflow-hidden px-1',
+            getMessageClass(message.content),
+        ]);
+    }, [message]);
     return (
         <div
             className={cn('group relative mb-4 flex items-start md:-ml-12')}
@@ -64,7 +72,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
             >
                 {message.role === 'user' ? <>{getAvatar(clientSideAgent)}</> : message.role === 'assistant'? <>{getAvatar(serverSideAgent)}</> : <IconRobotSimple />}
             </div>
-            <div className={msgStyles.join(' ')}>
+            <div className={cn(msgStyles.join(' '))}>
                 <MemoizedReactMarkdown
                     className="prose break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0"
                     remarkPlugins={[remarkGfm, remarkMath]}
