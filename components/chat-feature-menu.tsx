@@ -136,7 +136,7 @@ const FeatureDropdownList: React.FC<FeatureDropdownListProps> = ({ buttonLabels,
                             className="focus:outline-none] absolute z-10 mt-2 w-56 origin-top-right rounded-md shadow-lg ring-1 ring-black ring-opacity-5"
                         >
                             {chatFeatureOptions.agentList2.map((choice, index) => (
-                                <DropdownMenuItem key={index} className="flex-col items-start" onClick={() => handleChoiceClick(choice, 'scenarioButtonLabel')}>
+                                <DropdownMenuItem key={index} className="flex-col items-start" onClick={() => handleChoiceClick(choice, 'agentButtonLabel2')}>
                                     <div className="text-sm font-medium">{choice}</div>
                                 </DropdownMenuItem>
                             ))}
