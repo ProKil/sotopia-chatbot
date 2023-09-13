@@ -65,14 +65,22 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             id: sessionId,
         });
 
-    const turnOffTrackVisibility = () => {
-        if(window.innerHeight + window.scrollY <=
-            document.body.offsetHeight - 10){
-            setTrackVisibility(false);
-        }
-    };
+    
 
-    window.addEventListener('scroll', turnOffTrackVisibility, { passive: true });
+    
+    useEffect(function mount() {
+        const turnOffTrackVisibility = () => {
+            if(window.innerHeight + window.scrollY <=
+                document.body.offsetHeight - 10){
+                setTrackVisibility(false);
+            }
+        };
+        window.addEventListener('scroll', turnOffTrackVisibility, { passive: true });
+    
+        return function unMount() {
+          window.removeEventListener('scroll', turnOffTrackVisibility);
+        };
+      });
 
     useEffect(() => {
         if(isLoading) {
