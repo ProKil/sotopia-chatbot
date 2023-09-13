@@ -52,11 +52,11 @@ export function getInitials(fullName: string) {
 
 export function getMessageClass(messageType: string | undefined) {
     if (messageType?.startsWith('[action]')) {
-      return 'rounded-md shadow-sm bg-blue-200';
+      return 'rounded-md shadow-sm bg-blue-200 dark:bg-blue-800';
     } else if (messageType?.startsWith('[non-verbal communication]')) {
-      return 'rounded-md shadow-sm bg-green-200';
-    } else if (messageType?.startsWith('left the conversation')) {
-      return 'rounded-md shadow-sm bg-yellow-200';
+      return 'rounded-md shadow-sm bg-green-200 dark:bg-green-800';
+    } else if (messageType?.startsWith('[leave]')) {
+      return 'rounded-md shadow-sm bg-yellow-200 dark:bg-yellow-800';
     } else {
       return '';
     }
