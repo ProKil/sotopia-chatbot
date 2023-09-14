@@ -199,8 +199,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
                 </DialogContent>
             </Dialog>
 
-                
-
             <Dialog
                 open={previewTokenDialog}
                 onOpenChange={setPreviewTokenDialog}
