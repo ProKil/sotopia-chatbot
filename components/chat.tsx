@@ -184,10 +184,16 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
                             // Disable the button when loading is true
                             disabled={loading}
                         >
-                            {/* <div className="flex h-5 w-5 mr-3 animate-spin items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500">
-                            <div className="h-3 w-3 rounded-full bg-white"></div>
-                            </div> */}
-                            {loading ? 'Matching...' : 'Enter Session'}
+                            {loading ? (
+                            <div className="flex items-center">
+                                <div className="mr-3 flex h-5 w-5 animate-spin items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500">
+                                <div className="h-3 w-3 rounded-full bg-white"></div>
+                                </div>
+                                <div>Matching...</div>
+                            </div>
+                            ) : (
+                            'Enter Session'
+                            )}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
