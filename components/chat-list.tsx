@@ -67,7 +67,7 @@ function ChatParseInitialMessage(message: Message): Message[] {
             {
                 id: message.id,
                 role: 'system',
-                content: 'You are **interacting** with ' + Scenario.agent2+ '. ' + backgroundToMarkdown(Scenario.agent1 === clientSideAgent ? Scenario.agent2Background: Scenario.agent1Background),
+                content: 'You are **interacting** with ' + serverSideAgent+ '. ' + backgroundToMarkdown(Scenario.agent1 === clientSideAgent ? Scenario.agent2Background: Scenario.agent1Background),
             },
             {
                 id: message.id,

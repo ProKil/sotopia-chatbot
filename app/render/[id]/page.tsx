@@ -161,7 +161,7 @@ async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
 
         const name2model: { [name: string]: string } = {};
         messages_list_raw[0].slice(0, 2).forEach((message, index) => {
-            name2model[message[0]] = response_json.models[index]; // not handling #models < 1
+            name2model[message[0]] = response_json.models[index+1]; // not handling #models < 1
         });
         const filtered_messages_list =
             filterDidnothingMessages(messages_list_raw);
