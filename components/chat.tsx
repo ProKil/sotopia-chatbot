@@ -9,7 +9,6 @@ import { getSession } from 'next-auth/react';
 import { use, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import { getUserId } from '@/app/api/chat/route';
 import { auth } from '@/auth';
 import { ChatList } from '@/components/chat-list';
 import { ChatPanel } from '@/components/chat-panel';
