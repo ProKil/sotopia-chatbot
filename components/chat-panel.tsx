@@ -83,7 +83,7 @@ export function ChatPanel({
                             className="bg-background"
                         >
                             <IconStop className="mr-2" />
-                            Responding...
+                            Wait for your turn.
                         </Button>
                     ) : (
                         messages?.length > 0 && (
