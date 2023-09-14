@@ -42,6 +42,7 @@
         "class-variance-authority": "^0.4.0",
         "clsx": "^1.2.1",
         "focus-trap-react": "^10.1.1",
+        "fs": "0.0.1-security",
         "husky": "^8.0.3",
         "lucide-react": "^0.276.0",
         "nanoid": "^4.0.2",

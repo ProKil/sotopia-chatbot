@@ -7,7 +7,7 @@ import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom';
 import { FooterText } from '@/components/footer';
 import { PromptForm } from '@/components/prompt-form';
 import { Button } from '@/components/ui/button';
-import { IconRefresh, IconStop } from '@/components/ui/icons';
+import { IconCheck, IconRefresh, IconStop } from '@/components/ui/icons';
 
 import { ActionSelection } from './action-selection';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
@@ -76,6 +76,27 @@ export function ChatPanel({
             </DialogContent>
         </Dialog><div className="fixed inset-x-0 bottom-0 bg-gradient-to-b from-muted/10 from-10% to-muted/30 to-50%">
                 <ButtonScrollToBottom />
+                <div className="flex h-10 items-center justify-center">
+                    {isLoading ? (
+                        <Button
+                            variant="outline"
+                            className="bg-background"
+                        >
+                            <IconStop className="mr-2" />
+                            Wait for your turn.
+                        </Button>
+                    ) : (
+                        messages?.length > 0 && (
+                            <Button
+                                variant="outline"
+                                className="invisible bg-background"
+                            >
+                                <IconCheck className="mr-2" />
+                                Your turn.
+                            </Button>
+                        )
+                    )}
+                </div>
                 <div className="mx-auto sm:max-w-2xl sm:px-4">
                     <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
                         <ActionSelection setActionType={appendNoneOrLeaveDirectly} actionType={actionType} />
