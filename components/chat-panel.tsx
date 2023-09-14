@@ -11,7 +11,7 @@ import { IconCheck, IconRefresh, IconStop } from '@/components/ui/icons';
 
 import { ActionSelection } from './action-selection';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-import { ChatRequestOptions } from './use-chat';
+import { ChatRequestOptions , useInterval  } from './use-chat';
 
 
 export interface ChatPanelProps {
@@ -48,32 +48,23 @@ export function ChatPanel({
             }
         };
 
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [timeLeft, setTimeLeft] = useState(120);
     const prevIsLoading = useRef<boolean | null>(null); // Using useRef to remember the previous value
+    
+    useInterval(() => {
+        setTimeLeft(isLoading?120:max(0,timeLeft-1));
+    }, 1000);
 
     useEffect(() => {
         // Check if the status of isLoading has changed
-        if (prevIsLoading.current !== null && prevIsLoading.current !== isLoading) {
-            console.log(`isLoading has changed from ${prevIsLoading.current} to ${isLoading}`);
-            // Perform any additional actions here
+        if (prevIsLoading.current !== isLoading && (!isLoading)) {
+            setTimeLeft(120);
         }
 
         // Update prevIsLoading with the current value of isLoading
         prevIsLoading.current = isLoading;
 
-        let timer: NodeJS.Timeout;  // declare timer variable
-
-        if (isLoading) { // check the condition you want to start the timer
-            timer = setInterval(() => {
-                setTimeLeft(prevTimeLeft => prevTimeLeft > 0 ? prevTimeLeft - 1 : 0);
-            }, 1000);
-        } else {
-            setTimeLeft(60); // reset timer when it's not loading
-        }
-
-        return () => {
-            if (timer) clearInterval(timer); // cleanup timer when component unmounts or condition changes
-        };
+        return () => {};
     }, [isLoading]); // Only isLoading in dependencies to keep it simple
 
 
@@ -151,3 +142,7 @@ export function ChatPanel({
             </div></>
     );
 }
+function max(arg0: number, arg1: number): number {
+    return arg0>arg1?arg0:arg1;
+}
+
