@@ -1,7 +1,7 @@
 import { type Message } from 'ai';
 import { type UseChatHelpers } from 'ai/react';
 import error from 'next/error';
-import { Dispatch, SetStateAction,useEffect, useState, useRef  } from 'react';
+import { Dispatch, SetStateAction,useEffect, useRef,useState  } from 'react';
 
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom';
 import { FooterText } from '@/components/footer';
@@ -49,7 +49,7 @@ export function ChatPanel({
         };
 
     const [timeLeft, setTimeLeft] = useState(60);
-    let prevIsLoading = useRef<boolean | null>(null); // Using useRef to remember the previous value
+    const prevIsLoading = useRef<boolean | null>(null); // Using useRef to remember the previous value
 
     useEffect(() => {
         // Check if the status of isLoading has changed
