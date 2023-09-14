@@ -32,7 +32,7 @@ function decideClientSideAgent(data: ScenarioData): string {
 const backgroundToMarkdown = (text: string) => {
     // Split the text into paragraphs
     text = text.replace('secrets:', '*secrets* 🔒:');
-    text = text.replace('Personality and values description:', '🧠');
+    text = text.replace('Personality and values description:', '*Personality and values* 🧠:');
     return text;
 };
       
@@ -47,7 +47,7 @@ function ChatParseInitialMessage(message: Message): Message[] {
         [{
             id: message.id,
             role: 'system',
-            content: "Hi, welcome to Sotopia! 👋 I am the 'stage director'. I will give you some instructions and hints during the interaction. 📝",
+            content: "Hi, welcome to Sotopia! 👋 I am the 'stage director'. I will give you some instructions and hints during the interaction. See [here](https://docs.google.com/document/d/1qKVsQwIHByrxSW2FSkIE-V6pnmKKbrjnk0A3ne1dDUY/edit?usp=sharing) for the interface instruction.",
         },
             {
                 id: message.id,
