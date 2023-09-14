@@ -17,6 +17,7 @@ export interface PromptProps
     extends Pick<UseChatHelpers, 'input' | 'setInput'> {
     onSubmit: (value: string) => Promise<void>;
     isLoading: boolean;
+    timeLeft: number;
 }
 
 export function PromptForm({
@@ -24,10 +25,10 @@ export function PromptForm({
     input,
     setInput,
     isLoading,
+    timeLeft,
 }: PromptProps) {
     const { formRef, onKeyDown } = useEnterSubmit();
     const inputRef = React.useRef<HTMLTextAreaElement>(null);
-    const router = useRouter();
 
     React.useEffect(() => {
         if (inputRef.current) {
@@ -48,6 +49,7 @@ export function PromptForm({
             ref={formRef}
         >
             <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
+                <div className="absolute left-4 top-5 sm:right-4">{timeLeft}s</div>
                 <Textarea
                     ref={inputRef}
                     tabIndex={0}

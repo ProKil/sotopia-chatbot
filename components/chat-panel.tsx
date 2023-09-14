@@ -1,7 +1,7 @@
 import { type Message } from 'ai';
 import { type UseChatHelpers } from 'ai/react';
 import error from 'next/error';
-import { Dispatch, SetStateAction,useEffect, useState  } from 'react';
+import { Dispatch, SetStateAction,useEffect, useState, useRef  } from 'react';
 
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom';
 import { FooterText } from '@/components/footer';
@@ -47,6 +47,37 @@ export function ChatPanel({
                 setActionType(actionTypeToSet);
             }
         };
+
+    const [timeLeft, setTimeLeft] = useState(60);
+    let prevIsLoading = useRef<boolean | null>(null); // Using useRef to remember the previous value
+
+    useEffect(() => {
+        // Check if the status of isLoading has changed
+        if (prevIsLoading.current !== null && prevIsLoading.current !== isLoading) {
+            console.log(`isLoading has changed from ${prevIsLoading.current} to ${isLoading}`);
+            // Perform any additional actions here
+        }
+
+        // Update prevIsLoading with the current value of isLoading
+        prevIsLoading.current = isLoading;
+
+        let timer: NodeJS.Timeout;  // declare timer variable
+
+        if (isLoading) { // check the condition you want to start the timer
+            timer = setInterval(() => {
+                setTimeLeft(prevTimeLeft => prevTimeLeft > 0 ? prevTimeLeft - 1 : 0);
+            }, 1000);
+        } else {
+            setTimeLeft(60); // reset timer when it's not loading
+        }
+
+        return () => {
+            if (timer) clearInterval(timer); // cleanup timer when component unmounts or condition changes
+        };
+    }, [isLoading]); // Only isLoading in dependencies to keep it simple
+
+
+
     return (
         <><Dialog
             open={noneOrLeaveDiaglog}
@@ -97,6 +128,7 @@ export function ChatPanel({
                         )
                     )}
                 </div>
+
                 <div className="mx-auto sm:max-w-2xl sm:px-4">
                     <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
                         <ActionSelection setActionType={appendNoneOrLeaveDirectly} actionType={actionType} />
@@ -112,7 +144,8 @@ export function ChatPanel({
                             } }
                             input={input}
                             setInput={setInput}
-                            isLoading={isLoading} />
+                            isLoading={isLoading}
+                            timeLeft={timeLeft} />
                     </div>
                 </div>
             </div></>
