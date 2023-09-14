@@ -60,8 +60,6 @@ export const parseScenarioData = (text: string): ScenarioData => {
     }
 
     // Extracting "agent1Goal" and "agent2Goal"
-    console.log(text);
-    console.log(scenarioData.agent2);
     const regexString = `(?<=${scenarioData.agent1}'s goal:)(.*?)(?=${scenarioData.agent2}'s goal:)`;
     const goalsMatch = text.match(new RegExp(regexString, 's'));
     if (goalsMatch) {

@@ -74,6 +74,7 @@ function showAdditionalInfo(message: Message) {
 
 export function parseMessage(message: string): string {
     try {
+        console.log(message);
         const parsed = JSON.parse(message);
         if (parsed.action_type === 'speak') {
             return parsed.argument;
@@ -83,8 +84,7 @@ export function parseMessage(message: string): string {
         }
     }
     catch (e) {
-        const content = message.replace(/.*said:/, 'said:').trim();
-  
+        const content = message.replace(/.*said:/, 'said:').replace(/.*?\[non-verbal communication\]/, '[non-verbal communication]').replace(/.*?\[action\]/, '[action]').trim();
         if (content.startsWith('said: "')) {
             return content.substring(7, content.length - 1);
         }
