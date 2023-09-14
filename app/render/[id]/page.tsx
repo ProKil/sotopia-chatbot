@@ -81,7 +81,7 @@ function composeMessages(
     });
 }
 async function getAgent(agentId: string): Promise<Character> {
-    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8002/';
+    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
@@ -122,7 +122,7 @@ declare type GetEpisodeHelper = {
 };
 
 async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
-    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8002/';
+    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
@@ -264,7 +264,6 @@ export default function ChatPage({ params }: ChatPageProps) {
         },
         []
     );
-    console.log(messages);
     const reasoning_data = parseReasoning(reasoning);
     return (
         <div className={cn('xl:px-30 grid grid-cols-12 gap-6 px-0 pb-[200px] pt-4 md:px-3 md:pt-10 lg:px-10 2xl:px-60')}>

@@ -21,21 +21,18 @@ export function EmptyScreen( { setSessionIdDialog }: EmptyScreenProps) {
                 </h1>
                 <p className="prose-sm mb-2 leading-relaxed">
                 You are invited to participate in a research study aiming to study realistic
-                social interactions across contexts between AI agents and humans. This research 
-                is dedicated to bridging the gap between technology and humanlike
+                social interactions across contexts between AI agents and humans.
+                This research is dedicated to bridging the gap between technology and humanlike
                 collabarotive interactions, ultimately paving the way for more
                 proficient and pro-social AI.
 
                 <br />
-                You will engage in an interaction with another agent,
-                following a provided social scenario, goals, and potential character
-                profiles. It&apos;s important to remember that you&apos;ll be taking on the role of a
-                specific character for this interaction, rather than responding as yourself.
+                You will engage in an interaction with another agent, following a provided social scenario, goals, and potential character profiles.
+                You will be taking on the role of a specific character for this interaction, rather than responding as yourself.
                 
                 <br />
                 You must be at least 18 years old. Participation is voluntary.
-                You may discontinue participation at any time during the research
-                activity. 
+                You may discontinue participation at any time during the research activity.
                 
                 <br />
                 </p>
