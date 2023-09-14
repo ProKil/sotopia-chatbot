@@ -81,7 +81,7 @@ function composeMessages(
     });
 }
 async function getAgent(agentId: string): Promise<Character> {
-    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8002/';
+    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
@@ -122,7 +122,7 @@ declare type GetEpisodeHelper = {
 };
 
 async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
-    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8002/';
+    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {

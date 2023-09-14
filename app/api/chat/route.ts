@@ -65,3 +65,8 @@ export async function POST(req: Request) {
 
     return new StreamingTextResponse(stream);
 }
+
+export async function getUserId() {
+    const session = await auth();
+    return session?.user.id;
+}

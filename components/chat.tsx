@@ -1,11 +1,16 @@
 'use client';
 
 import { type Message } from 'ai/react';
+import { set } from 'husky';
+import { nanoid } from 'nanoid';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
+import { getSession } from 'next-auth/react';
+import { use, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
+import { getUserId } from '@/app/api/chat/route';
+import { auth } from '@/auth';
 import { ChatList } from '@/components/chat-list';
 import { ChatPanel } from '@/components/chat-panel';
 import { ChatScrollAnchor } from '@/components/chat-scroll-anchor';
@@ -31,6 +36,9 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[];
     id?: string;
 }
+const API_URL = 'https://tiger.lti.cs.cmu.edu:8003';
+
+
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
     const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
@@ -46,12 +54,38 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     const [sessionId, setSessionId] = useState<string>(id || '');
     const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');  
     const [trackVisibility, setTrackVisibility] = useState<boolean>(false);
+    const [userId, setUserId] = useState<string>('');
+    const [loading, setLoading] = useState(false);
+
+    const fetchSessionId = async () => {
+        const session = await getSession();
+
+        while (1) {
+            if (session?.user?.email === undefined || session?.user?.email === null) {
+                redirect('/sign-in');
+            }
+            setUserId(session?.user?.email);
+            const response: Response = await fetch(
+                `${ API_URL}/enter_waiting_room/${ session?.user?.email}`,
+                { method: 'GET', cache: 'no-store' },
+            );
+            const id: string = await response.json();
+            await new Promise(f => setTimeout(f, 500));
+            if (id !== '') {
+                return id;
+            }   
+        }
+    };
 
     useEffect(() => {
         if (sessionId !== '') {
             const _connectSession = async () => {
                 console.log('connecting to session ' + sessionId);
-                await connectSession(sessionId, 'client user');
+                const session = await getSession();
+                if (session?.user?.email === undefined || session?.user?.email === null) {
+                    redirect('/sign-in');
+                }
+                await connectSession(sessionId, session?.user?.email);
                 console.log('connected to session ' + sessionId);
                 setHiddenOrNot('block');
             };
@@ -119,23 +153,43 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Enter your Session ID</DialogTitle>
+                        <DialogTitle>Click Enter Session to Start</DialogTitle>
                         <DialogDescription>
-                            Please check with your experimenter to acquire session ID.
+                            Please check with your experimenter if you have not been matched in 2 minutes after you click the button.
                         </DialogDescription>
                     </DialogHeader>
-                    <Input
-                        value={sessionIdInput}
-                        placeholder="Open Session ID"
-                        onChange={(e) => setSessionIdInput(e.target.value)}
-                    />
                     <DialogFooter className="items-center">
-                        <Button
-                            onClick={() => {
-                                setSessionId(sessionIdInput);
-                                setSessionIdDialog(false);
+                        <Button 
+                            onClick={async () => {
+                                try {
+                                    // Set loading to true when starting the fetch
+                                    setLoading(true);
+                        
+                                    const _sessionId = await fetchSessionId();
+                                    console.log(_sessionId);
+                        
+                                    if (typeof _sessionId === 'string') {
+                                        setSessionId(_sessionId);
+                                        setSessionIdDialog(false);
+                                    } else {
+                                        throw new Error('Session ID is not a string');
+                                    }
+                                } catch (err) {
+                                    console.error(err);
+                                    toast.error('Failed to enter session');
+                                } finally {
+                                    // Set loading to false when the fetch is complete (whether it succeeded or failed)
+                                    setLoading(false);
+                                }
                             }}
-                        >Enter Session</Button>
+                            // Disable the button when loading is true
+                            disabled={loading}
+                        >
+                            {/* <div className="flex h-5 w-5 mr-3 animate-spin items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500">
+                            <div className="h-3 w-3 rounded-full bg-white"></div>
+                            </div> */}
+                            {loading ? 'Matching...' : 'Enter Session'}
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

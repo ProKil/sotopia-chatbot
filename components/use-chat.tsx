@@ -1,6 +1,8 @@
 import { CreateMessage, type UseChatHelpers  } from 'ai/react';
 import { on } from 'events';
 import { nanoid } from 'nanoid';
+import { redirect } from 'next/navigation';
+import { getSession as getAuthSession } from 'next-auth/react';
 import { Dispatch, SetStateAction, useCallback, useEffect, useId, useRef, useState } from 'react';
 import useSWR, { KeyedMutator } from 'swr';
 
@@ -8,7 +10,7 @@ import { updateChat } from '@/app/actions';
 
 import { MessageTransaction, SessionTransaction } from './sotopia-types';
 
-const API_URL = 'https://tiger.lti.cs.cmu.edu:8002';
+const API_URL = 'https://tiger.lti.cs.cmu.edu:8003';
 
 export type Message = {
     id: string;
@@ -48,6 +50,9 @@ export interface SotopiaChatProps {
 }
 
 async function getSession(sessId: string): Promise<MessageTransaction[]> {
+    if (sessId === '') {
+        return [];
+    }
     const response: Response = await fetch(
         `${ API_URL}/get/${ sessId}`, 
         { method: 'GET', cache: 'no-store' },
@@ -57,11 +62,18 @@ async function getSession(sessId: string): Promise<MessageTransaction[]> {
 }
 
 export async function connectSession(sessId: string, senderId: string): Promise<MessageTransaction[]> {
-    const response: Response = await fetch(
-        `${ API_URL}/connect/${ sessId}/client/${ senderId}`, 
-        { method: 'POST', cache: 'no-store' },
-    );
-    const session: MessageTransaction[] = await response.json();
+    let session: MessageTransaction[] = [];
+    while (1) {
+        const response: Response = await fetch(
+            `${API_URL}/connect/${sessId}/client/${senderId}`,
+            { method: 'POST', cache: 'no-store' },
+        );
+        session = await response.json();
+        if (response.status === 200) {
+            break;
+        }
+        await new Promise(f => setTimeout(f, 500));
+    }
     return session;
 }
 
@@ -75,6 +87,9 @@ async function sendMessageToSession(sessId: string, senderId: string, message: s
 }
 
 async function getClientLock(sessId: string): Promise<string> {
+    if (sessId === '') {
+        return 'no action';
+    }
     const response: Response = await fetch(
         `${ API_URL}/get_lock/${ sessId}`, 
         { method: 'GET', cache: 'no-store' },
@@ -190,7 +205,13 @@ export function useChat({
                 const previousMessages = messagesRef.current;
                 mutate(chatRequest.messages, false);
 
-                await sendMessageToSession(chatId, 'client user', command).catch(console.error);
+                const session = await getAuthSession();
+
+                if (session?.user?.email === null || session?.user?.email === undefined) {
+                    redirect('/api/auth/signin');
+                }
+
+                await sendMessageToSession(chatId, session?.user?.email, command).catch(console.error);
             } catch (err) {
                 // Ignore abort errors as they are expected.
                 if ((err as any).name === 'AbortError') {
