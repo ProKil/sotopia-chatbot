@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Separator } from '@radix-ui/react-dropdown-menu';
 import { get } from 'https';
 import { type Metadata } from 'next';
-import { notFound, redirect } from 'next/navigation';
+import { notFound, redirect, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { getChat } from '@/app/actions';
@@ -28,7 +28,7 @@ import { cn } from '@/lib/utils';
 export const runtime = 'edge';
 export const preferredRegion = 'home';
 
-export interface ChatPageProps {
+export interface RenderPageProps {
     params: {
         id: string;
     };
@@ -67,6 +67,7 @@ function parseMessages(messages: any[][]) {
 function composeMessages(
     messages: any[][],
     name2model: { [name: string]: string },
+    omitModelNames?: boolean,
 ): Message[] {
     return messages.map((message: any) => {
         const [id, environment, content, type] = message;
@@ -76,7 +77,7 @@ function composeMessages(
             content,
             role,
             type,
-            additional_info: name2model[id],
+            additional_info: omitModelNames ? undefined : name2model[id],
         };
     });
 }
@@ -121,7 +122,7 @@ declare type GetEpisodeHelper = {
     scenario: ScenarioData;
 };
 
-async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
+async function getEpisode(episodeId: string, omitModelNames: boolean): Promise<GetEpisodeHelper> {
     const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
@@ -166,7 +167,7 @@ async function getEpisode(episodeId: string): Promise<GetEpisodeHelper> {
         const filtered_messages_list =
             filterDidnothingMessages(messages_list_raw);
         const parsed_messages_list = parseMessages(filtered_messages_list);
-        const messages_list = composeMessages(parsed_messages_list, name2model);
+        const messages_list = composeMessages(parsed_messages_list, name2model, omitModelNames);
         return {
             messages: messages_list,
             messages_context: response_json.messages,
@@ -239,19 +240,21 @@ function getAgentTwoRewards(rewards: any): rewards {
     return rewards[1][1];
 }
 
-export default function ChatPage({ params }: ChatPageProps) {
+export default function ChatPage({ params }: RenderPageProps) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [messages_context, setMessagesContext] = useState<any>(null);
     const [rewards, setRewards] = useState<any>(null);
     const [reasoning, setReasoning] = useState<any>(null);
-    const [agent1, setAgent1] = useState<Character>(getEmptyCharacter());;
-    const [agent2, setAgent2] = useState<Character>(getEmptyCharacter());;
-    const [scenario, setScenario] = useState<ScenarioData>(getEmptyScenarioData());;
+    const [agent1, setAgent1] = useState<Character>(getEmptyCharacter());
+    const [agent2, setAgent2] = useState<Character>(getEmptyCharacter());
+    const [scenario, setScenario] = useState<ScenarioData>(getEmptyScenarioData());
+    const searchParams = useSearchParams();
 
     useEffect(
         () => {
             const fetchData = async () => {
-                const { messages, messages_context, rewards, reasoning, agent1, agent2, scenario } = await getEpisode(params.id);
+                const omitModelNames = searchParams.has('omit') && searchParams.get('omit') === 'true';
+                const { messages, messages_context, rewards, reasoning, agent1, agent2, scenario } = await getEpisode(params.id, omitModelNames);
                 setMessages(messages);
                 setMessagesContext(messages_context);
                 setRewards(rewards);
@@ -262,7 +265,7 @@ export default function ChatPage({ params }: ChatPageProps) {
             };
             fetchData().catch(console.error);
         },
-        []
+        [params]
     );
     const reasoning_data = parseReasoning(reasoning);
     return (
