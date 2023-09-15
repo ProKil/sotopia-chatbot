@@ -1,5 +1,6 @@
 import { type Message } from 'ai';
 import { type UseChatHelpers } from 'ai/react';
+import { set } from 'husky';
 import error from 'next/error';
 import { Dispatch, SetStateAction,useEffect, useRef,useState  } from 'react';
 
@@ -56,8 +57,12 @@ export function ChatPanel({
     }, 1000);
 
     useEffect(() => {
+        if (prevIsLoading.current === null) {
+            setTimeLeft(300);
+        }
+
         // Check if the status of isLoading has changed
-        if (prevIsLoading.current !== isLoading && (!isLoading)) {
+        if (prevIsLoading.current !== isLoading && (!isLoading) && (prevIsLoading.current !== null)) {
             setTimeLeft(120);
         }
 

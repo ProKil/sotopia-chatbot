@@ -38,7 +38,6 @@ export interface ChatProps extends React.ComponentProps<'div'> {
 const API_URL = 'https://tiger.lti.cs.cmu.edu:8003';
 
 
-
 export function Chat({ id, initialMessages, className }: ChatProps) {
     const [previewToken, setPreviewToken] = useLocalStorage<string | null>(
         'ai-token',
