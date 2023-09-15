@@ -36,6 +36,8 @@ export function PromptForm({
         }
     }, []);
 
+    // console.log({ timeLeft }, { timeLeft.timeLeft } > 30);
+
     return (
         <form
             onSubmit={async (e) => {
@@ -50,6 +52,22 @@ export function PromptForm({
         >
             <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-background px-8 sm:rounded-md sm:border sm:px-12">
                 {/* <div className="absolute left-4 top-5 sm:right-4">{timeLeft}s</div> */}
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <button
+                            className={cn(
+                                buttonVariants({
+                                    size: 'sm',
+                                    variant: 'outline',
+                                }),
+                                'absolute left-0 top-4 h-8 w-8 rounded-full bg-background p-0 sm:left-4',
+                            )}
+                        >
+                        <span className={`font-sans text-sm ${timeLeft < 30 ? 'font-normal text-red-800' : 'font-thin'}`}>{timeLeft}s</span>
+                        </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{timeLeft}s</TooltipContent>
+                </Tooltip>
                 <Textarea
                     ref={inputRef}
                     tabIndex={0}

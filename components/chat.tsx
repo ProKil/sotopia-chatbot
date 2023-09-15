@@ -48,7 +48,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         previewToken ?? '',
     );
     const [sessionIdDialog, setSessionIdDialog] = useState(false);
-    const [sessionIdInput, setSessionIdInput] = useState<string>('');
     const [sessionId, setSessionId] = useState<string>(id || '');
     const [hiddenOrNot, setHiddenOrNot] = useState<string>('hidden');  
     const [trackVisibility, setTrackVisibility] = useState<boolean>(false);
@@ -83,9 +82,9 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
                 if (session?.user?.email === undefined || session?.user?.email === null) {
                     redirect('/sign-in');
                 }
+                setHiddenOrNot('block');
                 await connectSession(sessionId, session?.user?.email);
                 console.log('connected to session ' + sessionId);
-                setHiddenOrNot('block');
             };
             _connectSession().catch(console.error);
         }
@@ -97,9 +96,6 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             id: sessionId,
         });
 
-    
-
-    
     useEffect(function mount() {
         const turnOffTrackVisibility = () => {
             if(window.innerHeight + window.scrollY <=
