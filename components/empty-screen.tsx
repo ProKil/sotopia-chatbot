@@ -44,7 +44,7 @@ export function EmptyScreen( { setSessionIdDialog }: EmptyScreenProps) {
                 </p>
 
 
-                    <p className='prose-sm mb-2 leading-relaxed bg-lime-200 dark:bg-slate-800 rounded-md drop-shadow-md px-1'>
+                    <p className='prose-sm mb-2 rounded-md bg-lime-200 px-1 leading-relaxed drop-shadow-md dark:bg-slate-800'>
                         Note that this is only a <em>pilot</em> study and we look forward to your feedback. The study is best experienced on a desktop or laptop computer.
                     </p> 
                 <div className="text-center">
