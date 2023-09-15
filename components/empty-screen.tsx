@@ -35,7 +35,18 @@ export function EmptyScreen( { setSessionIdDialog }: EmptyScreenProps) {
                 You may discontinue participation at any time during the research activity.
                 
                 <br />
+                <br />
+                <i>Confidentiality</i>: The study will collect your research data, and the data collected in this study will be made unidentifiable to the best of our extent. We will securely store the data on our servers and only share with qualified researchers. If you later decide that you do not want your responses included in this study, please email so we can exclude your work.
+                
+                <br />
+                <br />
+                <i>Contact</i>: If you have any questions about this study, desire additional information, or wish to withdraw your participation please contact us. If you have questions pertaining to your rights as a research participant; or to report concerns to this study, you should contact the Office of Research Integrity and Compliance at Carnegie Mellon University, referencing study number STUDY2023_00000299. Email: irb-review@andrew.cmu.edu. Phone: 412-268-4721.
                 </p>
+
+
+                    <p className='prose-sm mb-2 rounded-md bg-lime-200 px-1 leading-relaxed drop-shadow-md dark:bg-slate-800'>
+                        Note that this is only a <em>pilot</em> study and we look forward to your feedback. The study is best experienced on a desktop or laptop computer.
+                    </p> 
                 <div className="text-center">
                 <Button  variant="link" onClick={()=>{window.print();}}>Print a copy of this consent form for your records.</Button> 
                 </div>
