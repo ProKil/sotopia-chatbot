@@ -65,7 +65,10 @@ export function ChatPanel({
                             if(!id) throw new Error('id is not defined');
                             append({
                                 id,
-                                content: `{"action_type": "${ noneOrLeave}", "argument": ""}`,
+                                content: JSON.stringify({
+                                    action_type: noneOrLeave, 
+                                    argument: ''
+                                }),
                                 role: 'user',
                             });
                             setInput('');
@@ -105,7 +108,10 @@ export function ChatPanel({
                                 if (id) {
                                     await append({
                                         id,
-                                        content: `{"action_type": "${actionType}", "argument": "${value}"}`,
+                                        content: JSON.stringify({
+                                            action_type: actionType,
+                                            argument: value,
+                                        }),
                                         role: 'user',
                                     });
                                 }
