@@ -82,8 +82,14 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
                 if (session?.user?.email === undefined || session?.user?.email === null) {
                     redirect('/sign-in');
                 }
-                setHiddenOrNot('block');
-                await connectSession(sessionId, session?.user?.email);
+                setHiddenOrNot('block'); // optimistic rendering
+                try {
+                    await connectSession(sessionId, session?.user?.email);
+                } catch (err) {
+                    console.error(err);
+                    toast.error('Failed to connect to session');
+                    setHiddenOrNot('hidden');
+                }
                 console.log('connected to session ' + sessionId);
             };
             _connectSession().catch(console.error);
