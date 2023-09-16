@@ -77,13 +77,14 @@ export const parseScenarioData = (text: string): ScenarioData => {
     const text_list = text.split('\n\n\n');
     if (text_list.length > 1) {
         text = text_list[1];
-        const regexString_2 = `${scenarioData.agent2}'s goal:\\s*([\\s\\S]*?)(?=Conversation Starts:|\\$)`;
-        const goalsMatch_2 = text.match(new RegExp(regexString_2, 'i'));
+        console.log(text);
+        const regexString_2 = `(?<=${scenarioData.agent2}'s goal:)(.*?)(?=Conversation Starts:)`;
+        const goalsMatch_2 = text.match(new RegExp(regexString_2, 's'));
+        console.log(goalsMatch_2);
         if (goalsMatch_2) {
             const goals_2 = goalsMatch_2[1].trim().split('\n');
-            scenarioData.agent2Goal = goals_2[0].trim();
+            scenarioData.agent2Goal = goals_2.join(' \n').trim();
         }
     }
-
     return scenarioData;
 };
