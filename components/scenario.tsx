@@ -61,13 +61,13 @@ export const parseScenarioData = (text: string): ScenarioData => {
 
     // Extracting "agent1Goal" and "agent2Goal"
     const regexString = `(?<=${scenarioData.agent1}'s goal:)(.*?)(?=${scenarioData.agent2}'s goal:)`;
-    const goalsMatch = text.match(new RegExp(regexString, 's'));
+    const goalsMatch = text.match(new RegExp(regexString, 'su'));
     if (goalsMatch) {
         const goals = goalsMatch[1].trim().split('\n');
         scenarioData.agent1Goal = goals.join(' \n').trim();
     }
     const regexString_2 = `(?<=${scenarioData.agent2}'s goal:)(.*?)(?=Conversation Starts:)`;
-    const goalsMatch_2 = text.match(new RegExp(regexString_2, 's'));
+    const goalsMatch_2 = text.match(new RegExp(regexString_2, 'su'));
     if (goalsMatch_2) {
         const goals_2 = goalsMatch_2[1].trim().split('\n');
         scenarioData.agent2Goal = goals_2.join(' \n').trim();
@@ -77,13 +77,14 @@ export const parseScenarioData = (text: string): ScenarioData => {
     const text_list = text.split('\n\n\n');
     if (text_list.length > 1) {
         text = text_list[1];
-        const regexString_2 = `${scenarioData.agent2}'s goal:\\s*([\\s\\S]*?)(?=Conversation Starts:|\\$)`;
-        const goalsMatch_2 = text.match(new RegExp(regexString_2, 'i'));
+        console.log(text);
+        const regexString_2 = `(?<=${scenarioData.agent2}'s goal:)(.*?)(?=Conversation Starts:)`;
+        const goalsMatch_2 = text.match(new RegExp(regexString_2, 'su'));
+        console.log(goalsMatch_2);
         if (goalsMatch_2) {
             const goals_2 = goalsMatch_2[1].trim().split('\n');
-            scenarioData.agent2Goal = goals_2[0].trim();
+            scenarioData.agent2Goal = goals_2.join(' \n').trim();
         }
     }
-
     return scenarioData;
 };
