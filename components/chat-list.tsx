@@ -47,7 +47,7 @@ function ChatParseInitialMessage(message: Message): Message[] {
         [{
             id: message.id,
             role: 'system',
-            content: "Hi, welcome to Sotopia! 👋 I am the 'stage director'. I will give you some instructions and hints during the interaction. See [here](https://docs.google.com/document/d/1qKVsQwIHByrxSW2FSkIE-V6pnmKKbrjnk0A3ne1dDUY/edit?usp=sharing) for the interface instruction.",
+            content: "Hi, welcome to Sotopia! 👋 I am the 'stage director'. I will give you some instructions and hints during the interaction. See [here](https://docs.google.com/document/d/1qKVsQwIHByrxSW2FSkIE-V6pnmKKbrjnk0A3ne1dDUY/edit?usp=sharing) for the interface instruction. *Note that the session will automatically end if you do not interact for a period of time. We encourage you to finsh each turn in 2 mins.* ",
         },
             {
                 id: message.id,

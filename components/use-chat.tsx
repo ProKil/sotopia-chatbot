@@ -98,7 +98,7 @@ async function getClientLock(sessId: string): Promise<string> {
     return lock;
 }
 
-function useInterval(callback: () => void, delay: number) {
+export function useInterval(callback: () => void, delay: number) {
     const savedCallback = useRef<()=>void>(()=>{});
   
     // Remember the latest callback.

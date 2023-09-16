@@ -1,7 +1,8 @@
 import { type Message } from 'ai';
 import { type UseChatHelpers } from 'ai/react';
+import { set } from 'husky';
 import error from 'next/error';
-import { Dispatch, SetStateAction,useEffect, useState  } from 'react';
+import { Dispatch, SetStateAction,useEffect, useRef,useState  } from 'react';
 
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom';
 import { FooterText } from '@/components/footer';
@@ -11,7 +12,7 @@ import { IconCheck, IconRefresh, IconStop } from '@/components/ui/icons';
 
 import { ActionSelection } from './action-selection';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from './ui/dialog';
-import { ChatRequestOptions } from './use-chat';
+import { ChatRequestOptions , useInterval  } from './use-chat';
 
 
 export interface ChatPanelProps {
@@ -47,6 +48,32 @@ export function ChatPanel({
                 setActionType(actionTypeToSet);
             }
         };
+
+    const [timeLeft, setTimeLeft] = useState(120);
+    const prevIsLoading = useRef<boolean | null>(null); // Using useRef to remember the previous value
+    
+    useInterval(() => {
+        setTimeLeft(isLoading?120:max(0,timeLeft-1));
+    }, 1000);
+
+    useEffect(() => {
+        if (prevIsLoading.current === null) {
+            setTimeLeft(300);
+        }
+
+        // Check if the status of isLoading has changed
+        if (prevIsLoading.current !== isLoading && (!isLoading) && (prevIsLoading.current !== null)) {
+            setTimeLeft(120);
+        }
+
+        // Update prevIsLoading with the current value of isLoading
+        prevIsLoading.current = isLoading;
+
+        return () => {};
+    }, [isLoading]); // Only isLoading in dependencies to keep it simple
+
+
+
     return (
         <><Dialog
             open={noneOrLeaveDiaglog}
@@ -97,6 +124,7 @@ export function ChatPanel({
                         )
                     )}
                 </div>
+
                 <div className="mx-auto sm:max-w-2xl sm:px-4">
                     <div className="space-y-4 border-t bg-background px-4 py-2 shadow-lg sm:rounded-t-xl sm:border md:py-4">
                         <ActionSelection setActionType={appendNoneOrLeaveDirectly} actionType={actionType} />
@@ -112,9 +140,14 @@ export function ChatPanel({
                             } }
                             input={input}
                             setInput={setInput}
-                            isLoading={isLoading} />
+                            isLoading={isLoading}
+                            timeLeft={timeLeft} />
                     </div>
                 </div>
             </div></>
     );
 }
+function max(arg0: number, arg1: number): number {
+    return arg0>arg1?arg0:arg1;
+}
+
