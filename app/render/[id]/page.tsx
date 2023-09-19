@@ -1,23 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Separator } from '@radix-ui/react-dropdown-menu';
-import { get } from 'https';
-import { type Metadata } from 'next';
-import { notFound, redirect, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-import { getChat } from '@/app/actions';
-import { auth } from '@/auth';
 import CharacterCard, { Character, } from '@/components/character';
-import { ChatProps } from '@/components/chat';
 import { ChatList } from '@/components/chat-list-history';
 import { Message, parseMessage } from '@/components/chat-message-history';
-import { EmptyScreen } from '@/components/empty-screen';
 import RawScoresReasoning from '@/components/raw_scores_reasoning';
 import {
     parseReasoning,
     rewardDiagram,
     rewards,
-    ScoresCommentsData,
 } from '@/components/rewards';
 import { parseScenarioData, ScenarioData } from '@/components/scenario';
 import { IconOpenAI } from '@/components/ui/icons';
