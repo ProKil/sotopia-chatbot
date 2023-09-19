@@ -1,3 +1,5 @@
+'use client';
+
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
@@ -129,7 +131,13 @@ const avatars: Avatars = {
 //   </div>
 // );
 
-export function getAvatar(agentName: string, width = 100, height = 100) {
+interface AgentAvatorProps {
+  agentName: string;
+  width?: number;
+  height?: number;
+}
+
+export function AgentAvator({ agentName, width = 100, height = 100 }: AgentAvatorProps) {
   // Your logic to generate the SVG based on agentName
   // Example return statement with Next.js Image component:
   return (
@@ -166,7 +174,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   })
 }));
 
-export default function CharacterCard(agent: Character) {
+interface CharacterCardProps {
+  agent: Character;
+}
+
+export default function CharacterCard({ agent }: CharacterCardProps) {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -179,7 +191,7 @@ export default function CharacterCard(agent: Character) {
         avatar={
           <div className="relative h-[50px] w-[50px] rounded-md border-[1px] border-gray-400 shadow-lg">
           <div className="absolute inset-0 flex items-center justify-center">
-    {getAvatar(agent.first_name+' '+agent.last_name)}
+          <AgentAvator agentName={agent.first_name+' '+agent.last_name} />
           </div>
         </div>
         }
