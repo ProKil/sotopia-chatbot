@@ -9,7 +9,7 @@ import { CodeBlock } from '@/components/ui/codeblock';
 import { IconOpenAI, IconUser } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
 
-import { getAvatar } from './character';
+import { AgentAvator } from './character';
 import { ChatMessageActions } from './chat-message-actions-history';
 
 export declare type Message = {
@@ -100,6 +100,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
         getMessageClass(message.content),
     ];
     return (
+        <>
         <div
             className={cn('group relative mb-4 flex items-start md:-ml-12')}
             {...props}
@@ -115,7 +116,7 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                 {message.role === 'user' ? (
                     <IconUser />
                 ) : message.role === 'character' ? (
-                    <>{getAvatar(message.id)}</>
+                    <><AgentAvator agentName={message.id} /> </>
                 ) : (
                     <IconOpenAI />
                 )}
@@ -172,6 +173,6 @@ export function ChatMessage({ message, ...props }: ChatMessageProps) {
                 {showAdditionalInfo(message)}
                 <ChatMessageActions message={message} />
             </div>
-        </div>
+        </div></>
     );
 }
