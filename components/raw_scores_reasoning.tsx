@@ -42,7 +42,7 @@ function RawScoresReasoning(scores: rewards, reasoning: string) {
                         Raw Scores
                     </summary>
                     <div className="mt-3 flex-wrap break-words text-sm leading-6 text-slate-600 dark:text-slate-400">
-                        {scores_string}
+                        <p>{scores_string}</p>
                     </div>
                 </details>
             </div>

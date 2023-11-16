@@ -1,11 +1,25 @@
+'use client';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Separator } from '@radix-ui/react-dropdown-menu';
+import { get } from 'https';
+import { type Metadata } from 'next';
+import { notFound, redirect, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+import { getChat } from '@/app/actions';
+import { auth } from '@/auth';
 import CharacterCard, { Character, } from '@/components/character';
+import { ChatProps } from '@/components/chat';
 import { ChatList } from '@/components/chat-list-history';
 import { Message, parseMessage } from '@/components/chat-message-history';
+import { EmptyScreen } from '@/components/empty-screen';
 import RawScoresReasoning from '@/components/raw_scores_reasoning';
 import {
     parseReasoning,
     rewardDiagram,
     rewards,
+    ScoresCommentsData,
 } from '@/components/rewards';
 import { parseScenarioData, ScenarioData } from '@/components/scenario';
 import { IconOpenAI } from '@/components/ui/icons';
@@ -17,9 +31,6 @@ export const preferredRegion = 'home';
 export interface RenderPageProps {
     params: {
         id: string;
-    };
-    searchParams?: {
-        omit?: string;
     };
 }
 
@@ -71,7 +82,7 @@ function composeMessages(
     });
 }
 async function getAgent(agentId: string): Promise<Character> {
-    const SOTOPIA_SERVER_URL = process.env.SOTOPIA_SERVER_URL;
+    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
@@ -234,9 +245,33 @@ function getAgentTwoRewards(rewards: any): rewards {
     return rewards[1][1];
 }
 
-export default async function ChatPage({ params, searchParams }: RenderPageProps) {
-    const omitModelNames: boolean = searchParams?.omit === 'true';
-    const { messages, messages_context, rewards, reasoning, agent1, agent2, scenario } = await getEpisode(params.id, omitModelNames);
+export default function ChatPage({ params }: RenderPageProps) {
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [messages_context, setMessagesContext] = useState<any>(null);
+    const [rewards, setRewards] = useState<any>(null);
+    const [reasoning, setReasoning] = useState<any>(null);
+    const [agent1, setAgent1] = useState<Character>(getEmptyCharacter());
+    const [agent2, setAgent2] = useState<Character>(getEmptyCharacter());
+    const [scenario, setScenario] = useState<ScenarioData>(getEmptyScenarioData());
+    const searchParams = useSearchParams();
+
+    useEffect(
+        () => {
+            const fetchData = async () => {
+                const omitModelNames = searchParams.has('omit') && searchParams.get('omit') === 'true';
+                const { messages, messages_context, rewards, reasoning, agent1, agent2, scenario } = await getEpisode(params.id, omitModelNames);
+                setMessages(messages);
+                setMessagesContext(messages_context);
+                setRewards(rewards);
+                setReasoning(reasoning);
+                setAgent1(agent1);
+                setAgent2(agent2);
+                setScenario(scenario);
+            };
+            fetchData().catch(console.error);
+        },
+        [params]
+    );
     const reasoning_data = parseReasoning(reasoning);
     return (
         <div className={cn('xl:px-30 grid grid-cols-12 gap-6 px-0 pb-[200px] pt-4 md:px-3 md:pt-10 lg:px-10 2xl:px-60')}>
@@ -246,7 +281,7 @@ export default async function ChatPage({ params, searchParams }: RenderPageProps
                     <h1 className="text-center font-sans text-xl italic">{scenario.scenario}</h1>
                 </div>
                 <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 xl:col-span-4 xl:col-start-3 xl:px-5">
-                    <CharacterCard agent={agent1} />
+                    {CharacterCard(agent1)}
                     <div className="p-5">
                     <div className="rounded-md bg-slate-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                         <h1 className="text-md text-center font-sans">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent1Goal}</h1>
@@ -254,7 +289,7 @@ export default async function ChatPage({ params, searchParams }: RenderPageProps
                 </div>
                 </div>
                 <div className="col-span-10 col-start-2 sm:col-span-8 sm:col-start-3 xl:col-span-4 xl:col-start-7 xl:px-5">
-                <CharacterCard agent={agent2} />
+                    {CharacterCard(agent2)}
                     <div className="p-5">
                     <div className="rounded-md bg-slate-200 p-3 drop-shadow-sm hover:drop-shadow-md dark:bg-black dark:text-white">
                         <h1 className="text-md text-center font-sans">Goal <i className="fa-solid fa-bullseye"></i>: {scenario.agent2Goal}</h1>
