@@ -1,16 +1,8 @@
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Avatar from '@mui/material/Avatar';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import Collapse from '@mui/material/Collapse';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
 import Image, { StaticImageData } from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import * as React from 'react';
+
+import CollapsibleCard from './ui/collapsible-card';
+
 
 export type Character = {
     pk: string;
@@ -129,7 +121,13 @@ const avatars: Avatars = {
 //   </div>
 // );
 
-export function getAvatar(agentName: string, width = 100, height = 100) {
+interface AgentAvatorProps {
+  agentName: string;
+  width?: number;
+  height?: number;
+}
+
+export function AgentAvator({ agentName, width = 100, height = 100 }: AgentAvatorProps) {
   // Your logic to generate the SVG based on agentName
   // Example return statement with Next.js Image component:
   return (
@@ -150,77 +148,41 @@ export function getAvatar(agentName: string, width = 100, height = 100) {
 }
 
 
-
-interface ExpandMoreProps extends IconButtonProps {
-  expand: boolean;
+interface CharacterCardProps {
+  agent: Character;
 }
 
-const ExpandMore = styled((props: ExpandMoreProps) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest
-  })
-}));
-
-export default function CharacterCard(agent: Character) {
-  const [expanded, setExpanded] = React.useState(false);
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
-
+export default function CharacterCard({ agent }: CharacterCardProps) {
   return (
-    <Card>
-      <CardHeader sx={{ pb: 0 }}
-        avatar={
-          <div className="relative h-[50px] w-[50px] rounded-md border-[1px] border-gray-400 shadow-lg">
+    <>
+    <CollapsibleCard
+      cardHeader={<>
+        <CardHeader sx={{ pb: 0 }}
+        avatar={<div className="relative h-[50px] w-[50px] rounded-md border-[1px] border-gray-400 shadow-lg">
           <div className="absolute inset-0 flex items-center justify-center">
-    {getAvatar(agent.first_name+' '+agent.last_name)}
+            <AgentAvator agentName={agent.first_name + ' ' + agent.last_name} />
           </div>
-        </div>
-        }
+        </div>}
         title={<p className="text-left text-xl font-bold leading-6 text-gray-900">{agent.first_name} {agent.last_name}</p>}
         subheader={<p className="font-lg text-left text-lg font-extralight leading-6 text-gray-600">
-        {agent.occupation} · {agent.gender_pronoun} · {agent.age}
-      </p>}
-      />
-
-      <CardActions sx={{ padding:0, maxHeight:20 }} disableSpacing >
-        <ExpandMore
-          expand={expanded}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon/>
-        </ExpandMore>
-      </CardActions>
-
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent sx={{ pt:0 }}>
-              <h3 className="flex pt-0">
-                <span className="text-left font-light">{agent.personality_and_values}</span>
-              </h3>
-              <h3 className="flex">
-                <span className="text-left font-light">{agent.decision_making_style}</span>
-              </h3>
-              <p className="text-left text-sm leading-6 text-gray-500 hover:text-gray-600">{agent.public_info}</p>
-              <ul className="mt-3 divide-y rounded border-[1px] border-red-900 bg-red-100 py-1 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">
-                <li className="flex px-3 py-2 text-sm">
-                  <div className="flex-row flex-wrap">
-                    <i className="fa-solid fa-lock fa-sm"></i>
-                    <span className="ml-auto">
-                      <span className="p-1 text-sm font-medium">{agent.secret}</span>
-                    </span>
-                  </div>
-                </li>
-              </ul>
-        </CardContent>
-      </Collapse>
-    </Card>
+          {agent.occupation} · {agent.gender_pronoun} · {agent.age}
+        </p>}/></>}
+        cardContent={
+          <><h3 className="flex pt-0">
+            <span className="text-left font-light">{agent.personality_and_values}</span>
+          </h3><h3 className="flex">
+              <span className="text-left font-light">{agent.decision_making_style}</span>
+            </h3><p className="text-left text-sm leading-6 text-gray-500 hover:text-gray-600">{agent.public_info}</p><ul className="mt-3 divide-y rounded border-[1px] border-red-900 bg-red-100 py-1 text-gray-600 shadow-sm hover:text-gray-700 hover:shadow">
+              <li className="flex px-3 py-2 text-sm">
+                <div className="flex-row flex-wrap">
+                  <i className="fa-solid fa-lock fa-sm"></i>
+                  <span className="ml-auto">
+                    <span className="p-1 text-sm font-medium">{agent.secret}</span>
+                  </span>
+                </div>
+              </li>
+            </ul></>
+        }
+      /> </>
   );
 }
