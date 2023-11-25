@@ -112,7 +112,7 @@ declare type GetEpisodeHelper = {
 };
 
 async function getEpisode(episodeId: string, omitModelNames: boolean): Promise<GetEpisodeHelper> {
-    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
+    const SOTOPIA_SERVER_URL = 'http://54.227.18.156:8002/';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
