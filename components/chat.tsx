@@ -35,7 +35,7 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[];
     id?: string;
 }
-const API_URL = 'https://tiger.lti.cs.cmu.edu:8003';
+const API_URL = 'http://54.227.18.156:8002';
 
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
