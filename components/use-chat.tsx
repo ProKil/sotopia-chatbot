@@ -10,7 +10,7 @@ import { updateChat } from '@/app/actions';
 
 import { MessageTransaction, SessionTransaction } from './sotopia-types';
 
-const API_URL = 'https://tiger.lti.cs.cmu.edu:8003';
+const API_URL = 'https://sotopia.xuhuiz.com';
 
 export type Message = {
     id: string;
