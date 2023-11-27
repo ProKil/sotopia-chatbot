@@ -112,7 +112,7 @@ declare type GetEpisodeHelper = {
 };
 
 async function getEpisode(episodeId: string, omitModelNames: boolean): Promise<GetEpisodeHelper> {
-    const SOTOPIA_SERVER_URL = 'https://tiger.lti.cs.cmu.edu:8003/';
+    const SOTOPIA_SERVER_URL = 'https://sotopia.xuhuiz.com';
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
@@ -150,8 +150,13 @@ async function getEpisode(episodeId: string, omitModelNames: boolean): Promise<G
         const agent2 = await getAgent(agent_id2);
 
         const name2model: { [name: string]: string } = {};
+        const modelMapping: { [key: string]: string } = {
+            'togethercomputer/mpt-30b-chat': 'mpt-30b-chat',
+            'togethercomputer/llama-2-70b-chat': 'llama-2-70b-chat',
+            'redis': 'human',
+        };
         messages_list_raw[0].slice(0, 2).forEach((message, index) => {
-            name2model[message[0]] = response_json.models[index+1]; // not handling #models < 1
+            name2model[message[0]] = modelMapping[response_json.models[index+1]] || response_json.models[index+1]; // not handling #models < 1
         });
         const filtered_messages_list =
             filterDidnothingMessages(messages_list_raw);
