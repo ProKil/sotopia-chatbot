@@ -158,8 +158,11 @@ export function useChat({
                 if (session?.user?.email === null || session?.user?.email === undefined) {
                     redirect('/api/auth/signin');
                 }
+                console.log("Here's the command:");
+                console.log(command);
 
                 await sendMessageToSession(chatId, session?.user?.email, command).catch(console.error);
+                console.log('finished sending message to session');
             } catch (err) {
                 // Ignore abort errors as they are expected.
                 if ((err as any).name === 'AbortError') {
@@ -183,11 +186,12 @@ export function useChat({
             message: Message,
             { options }: ChatRequestOptions = {},
         ) => {
-            console.log(message);
             if (!message.id) {
                 message.id = nanoid();
             }
-
+            console.log("Here's more");
+            console.log(messagesRef);
+            console.log(message);
             const chatRequest: ChatRequest = {
                 messages: messagesRef.current.concat(message as Message),
                 options,
@@ -214,6 +218,7 @@ export function useChat({
 
     // Input state and handlers.
     const [input, setInput] = useState('');
+    console.log(messages);
 
     return {
         messages: messages || [],

@@ -35,11 +35,13 @@ export async function connectSession(sessId: string, senderId: string): Promise<
 }
 
 export async function sendMessageToSession(sessId: string, senderId: string, message: string): Promise<MessageTransaction[]> {
+    console.log('sending message to sessionnnnnnnnnnnnnnnnnnn ' + sessId);
     const response: Response = await fetch(
         `${ API_URL}/send/${ sessId}/${ senderId}`, 
         { method: 'POST', cache: 'no-store', body: message },
     );
     const session: MessageTransaction[] = await response.json();
+    console.log('sent message to sessionnnnnnnnnnnnnnnn ' + sessId);
     return session;
 }
 
