@@ -107,7 +107,7 @@ export function useChat({
         () => {
             const _getSession = async () => {
                 const session = await getSession(chatId);
-                const messages = session.map((message) => {
+                const newMessages = session.map((message) => {
                     return message.sender === 'server' ? {
                             id: chatId,
                             role: 'assistant',
@@ -119,25 +119,34 @@ export function useChat({
                         };
                     }
                 );
-                mutate(messages, false);
+                if (newMessages.length > (messagesRef.current?.length || 0)) {
+                    mutate(newMessages, false);
+                    const lock = await getClientLock(chatId);
+                    console.log('changing the status now');
+                    if (lock === 'no action') {
+                        mutateLoading(true, false);
+                    } else {
+                        mutateLoading(false, false);
+                    }
+                }
             };
             _getSession().catch(console.error);
         }, 100
     );
 
-    useInterval(
-        () => {
-            const _getClientLock = async () => {
-                const lock = await getClientLock(chatId);
-                if (lock === 'no action') {
-                    mutateLoading(true, false);
-                } else {
-                    mutateLoading(false, false);
-                }
-            };
-            _getClientLock().catch(console.error);
-        }, 100
-    );
+    // useInterval(
+    //     () => {
+    //         const _getClientLock = async () => {
+    //             const lock = await getClientLock(chatId);
+    //             if (lock === 'no action') {
+    //                 mutateLoading(true, false);
+    //             } else {
+    //                 mutateLoading(false, false);
+    //             }
+    //         };
+    //         _getClientLock().catch(console.error);
+    //     }, 100
+    // );
 
     const triggerRequest = useCallback(
         async (chatRequest: ChatRequest) => {
@@ -158,11 +167,8 @@ export function useChat({
                 if (session?.user?.email === null || session?.user?.email === undefined) {
                     redirect('/api/auth/signin');
                 }
-                console.log("Here's the command:");
-                console.log(command);
 
                 await sendMessageToSession(chatId, session?.user?.email, command).catch(console.error);
-                console.log('finished sending message to session');
             } catch (err) {
                 // Ignore abort errors as they are expected.
                 if ((err as any).name === 'AbortError') {
@@ -174,7 +180,8 @@ export function useChat({
 
                 setError(err as Error);
             } finally {
-                mutateLoading(false);
+                console.log('finally, you should not be here');
+                // mutateLoading(false);
                 return;
             }
         },
@@ -189,9 +196,6 @@ export function useChat({
             if (!message.id) {
                 message.id = nanoid();
             }
-            console.log("Here's more");
-            console.log(messagesRef);
-            console.log(message);
             const chatRequest: ChatRequest = {
                 messages: messagesRef.current.concat(message as Message),
                 options,
@@ -218,7 +222,6 @@ export function useChat({
 
     // Input state and handlers.
     const [input, setInput] = useState('');
-    console.log(messages);
 
     return {
         messages: messages || [],
