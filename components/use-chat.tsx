@@ -1,5 +1,3 @@
-import { CreateMessage, type UseChatHelpers  } from 'ai/react';
-import { on } from 'events';
 import { nanoid } from 'nanoid';
 import { redirect } from 'next/navigation';
 import { getSession as getAuthSession } from 'next-auth/react';
@@ -8,9 +6,8 @@ import useSWR, { KeyedMutator } from 'swr';
 
 import { updateChat } from '@/app/actions';
 
+import { getClientLock, getSession, sendMessageToSession } from './chat-api';
 import { MessageTransaction, SessionTransaction } from './sotopia-types';
-
-const API_URL = 'https://sotopia.xuhuiz.com';
 
 export type Message = {
     id: string;
@@ -47,55 +44,6 @@ export interface SotopiaChatProps {
     setInput: Dispatch<SetStateAction<string>>;
     isLoading: boolean;
     messages: Message[];
-}
-
-async function getSession(sessId: string): Promise<MessageTransaction[]> {
-    if (sessId === '') {
-        return [];
-    }
-    const response: Response = await fetch(
-        `${ API_URL}/get/${ sessId}`, 
-        { method: 'GET', cache: 'no-store' },
-    );
-    const session: MessageTransaction[] = await response.json();
-    return session;
-}
-
-export async function connectSession(sessId: string, senderId: string): Promise<MessageTransaction[]> {
-    let session: MessageTransaction[] = [];
-    while (1) {
-        const response: Response = await fetch(
-            `${API_URL}/connect/${sessId}/client/${senderId}`,
-            { method: 'POST', cache: 'no-store' },
-        );
-        session = await response.json();
-        if (response.status === 200) {
-            break;
-        }
-        await new Promise(f => setTimeout(f, 500));
-    }
-    return session;
-}
-
-async function sendMessageToSession(sessId: string, senderId: string, message: string): Promise<MessageTransaction[]> {
-    const response: Response = await fetch(
-        `${ API_URL}/send/${ sessId}/${ senderId}`, 
-        { method: 'POST', cache: 'no-store', body: message },
-    );
-    const session: MessageTransaction[] = await response.json();
-    return session;
-}
-
-async function getClientLock(sessId: string): Promise<string> {
-    if (sessId === '') {
-        return 'no action';
-    }
-    const response: Response = await fetch(
-        `${ API_URL}/get_lock/${ sessId}`, 
-        { method: 'GET', cache: 'no-store' },
-    );
-    const lock: string = await response.json();
-    return lock;
 }
 
 export function useInterval(callback: () => void, delay: number) {
@@ -159,7 +107,7 @@ export function useChat({
         () => {
             const _getSession = async () => {
                 const session = await getSession(chatId);
-                const messages = session.map((message) => {
+                const newMessages = session.map((message) => {
                     return message.sender === 'server' ? {
                             id: chatId,
                             role: 'assistant',
@@ -171,23 +119,18 @@ export function useChat({
                         };
                     }
                 );
-                mutate(messages, false);
-            };
-            _getSession().catch(console.error);
-        }, 100
-    );
-
-    useInterval(
-        () => {
-            const _getClientLock = async () => {
-                const lock = await getClientLock(chatId);
-                if (lock === 'no action') {
-                    mutateLoading(true, false);
-                } else {
-                    mutateLoading(false, false);
+                if (newMessages.length > (messagesRef.current?.length || 0)) {
+                    mutate(newMessages, false);
+                    const lock = await getClientLock(chatId);
+                    console.log('changing the status now');
+                    if (lock === 'no action') {
+                        mutateLoading(true, false);
+                    } else {
+                        mutateLoading(false, false);
+                    }
                 }
             };
-            _getClientLock().catch(console.error);
+            _getSession().catch(console.error);
         }, 100
     );
 
@@ -223,7 +166,6 @@ export function useChat({
 
                 setError(err as Error);
             } finally {
-                mutateLoading(false);
                 return;
             }
         },
@@ -235,11 +177,9 @@ export function useChat({
             message: Message,
             { options }: ChatRequestOptions = {},
         ) => {
-            console.log(message);
             if (!message.id) {
                 message.id = nanoid();
             }
-
             const chatRequest: ChatRequest = {
                 messages: messagesRef.current.concat(message as Message),
                 options,

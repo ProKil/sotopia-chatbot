@@ -4,7 +4,6 @@ import { type Message } from 'ai/react';
 import { set } from 'husky';
 import { nanoid } from 'nanoid';
 import { redirect } from 'next/navigation';
-import { useRouter } from 'next/router';
 import { getSession } from 'next-auth/react';
 import { use, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
@@ -22,11 +21,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { connectSession,useChat  } from '@/components/use-chat';
+import { useChat } from '@/components/use-chat';
 import { useLocalStorage } from '@/lib/hooks/use-local-storage';
 // import { useChat } from 'ai/react'
 import { cn } from '@/lib/utils';
 
+import { connectSession, fetchWaitingRoomData } from './chat-api';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 
@@ -35,7 +35,6 @@ export interface ChatProps extends React.ComponentProps<'div'> {
     initialMessages?: Message[];
     id?: string;
 }
-const API_URL = 'https://sotopia.xuhuiz.com';
 
 
 export function Chat({ id, initialMessages, className }: ChatProps) {
@@ -62,11 +61,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
                 redirect('/sign-in');
             }
             setUserId(session?.user?.email);
-            const response: Response = await fetch(
-                `${ API_URL}/enter_waiting_room/${ session?.user?.email}`,
-                { method: 'GET', cache: 'no-store' },
-            );
-            const id: string = await response.json();
+            const id: string = await fetchWaitingRoomData(session);
             await new Promise(f => setTimeout(f, 500));
             if (id !== '') {
                 return id;
@@ -101,6 +96,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
             initialMessages,
             id: sessionId,
         });
+   
 
     useEffect(function mount() {
         const turnOffTrackVisibility = () => {

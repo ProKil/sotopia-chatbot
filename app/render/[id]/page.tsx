@@ -75,11 +75,11 @@ async function getAgent(agentId: string): Promise<Character> {
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
-        console.log(`${SOTOPIA_SERVER_URL  }get_agent/${  agentId}`);
+        console.log(`${SOTOPIA_SERVER_URL  }/get_agent/${  agentId}`);
 
         try {
             const response = await fetch(
-                `${SOTOPIA_SERVER_URL  }get_agent/${  agentId}`,
+                `${SOTOPIA_SERVER_URL  }/get_agent/${  agentId}`,
                 { method: 'GET', cache: 'no-store' },
             );
 
@@ -112,13 +112,13 @@ declare type GetEpisodeHelper = {
 };
 
 async function getEpisode(episodeId: string, omitModelNames: boolean): Promise<GetEpisodeHelper> {
-    const SOTOPIA_SERVER_URL = 'https://sotopia.xuhuiz.com';
+    const SOTOPIA_SERVER_URL = process.env.SOTOPIA_SERVER_URL;
     if (SOTOPIA_SERVER_URL === undefined) {
         throw new Error('SOTOPIA_SERVER_URL is undefined');
     } else {
-        console.log(`${SOTOPIA_SERVER_URL  }get_episode/${  episodeId}`);
+        console.log(`${SOTOPIA_SERVER_URL  }/get_episode/${  episodeId}`);
         const response_json = await fetch(
-            `${SOTOPIA_SERVER_URL  }get_episode/${  episodeId}`,
+            `${SOTOPIA_SERVER_URL  }/get_episode/${  episodeId}`,
             { method: 'GET', cache: 'no-store' },
         )
             .then((response) => {
