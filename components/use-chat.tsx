@@ -134,20 +134,6 @@ export function useChat({
         }, 100
     );
 
-    // useInterval(
-    //     () => {
-    //         const _getClientLock = async () => {
-    //             const lock = await getClientLock(chatId);
-    //             if (lock === 'no action') {
-    //                 mutateLoading(true, false);
-    //             } else {
-    //                 mutateLoading(false, false);
-    //             }
-    //         };
-    //         _getClientLock().catch(console.error);
-    //     }, 100
-    // );
-
     const triggerRequest = useCallback(
         async (chatRequest: ChatRequest) => {
             try {
@@ -180,8 +166,6 @@ export function useChat({
 
                 setError(err as Error);
             } finally {
-                console.log('finally, you should not be here');
-                // mutateLoading(false);
                 return;
             }
         },
