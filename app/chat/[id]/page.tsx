@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { getChat } from '@/app/actions';
 import { auth } from '@/auth';
 import { Chat } from '@/components/chat';
+import { ChatFeatureMenu } from '@/components/chat-feature-menu';
 
 export const runtime = 'edge';
 export const preferredRegion = 'home';
@@ -39,7 +40,14 @@ export default async function ChatPage({ params }: ChatPageProps) {
     const chat = await getChat(params.id, session.user.id);
 
     if (!chat) {
-        return <Chat id={params.id} />;
+        // return <Chat id={params.id} />;
+        // TODO: Integrate chatFeatureMenu
+        return (
+            <>
+                <ChatFeatureMenu />
+                <Chat id={params.id} />
+            </>
+        );
     }
 
     if (chat?.userId !== session?.user?.id) {
